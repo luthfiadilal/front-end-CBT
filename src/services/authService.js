@@ -4,10 +4,11 @@ const authService = {
     // Login user
     async login(credentials) {
         try {
-            const response = await api.post('/auth/login', credentials);
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.user));
+            const response = await api.post('/login', credentials);
+            if (response.data.data?.token) {
+                localStorage.setItem('token', response.data.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                localStorage.setItem('profile', JSON.stringify(response.data.data.profile));
             }
             return response.data;
         } catch (error) {
@@ -18,7 +19,12 @@ const authService = {
     // Register user
     async register(userData) {
         try {
-            const response = await api.post('/auth/register', userData);
+            const response = await api.post('/register', userData);
+            if (response.data.data?.token) {
+                localStorage.setItem('token', response.data.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                localStorage.setItem('profile', JSON.stringify(response.data.data.profile));
+            }
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
@@ -29,6 +35,7 @@ const authService = {
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('profile');
     },
 
     // Get current user

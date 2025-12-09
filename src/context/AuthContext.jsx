@@ -18,9 +18,12 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (credentials) => {
         try {
-            const data = await authService.login(credentials);
-            setUser(data.user);
-            return data;
+            const response = await authService.login(credentials);
+            // response = { success: true, data: { user, profile, token } }
+            if (response.data?.user) {
+                setUser(response.data.user);
+            }
+            return response;
         } catch (error) {
             throw error;
         }
@@ -33,8 +36,12 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const data = await authService.register(userData);
-            return data;
+            const response = await authService.register(userData);
+            // Auto login after registration
+            if (response.data?.user) {
+                setUser(response.data.user);
+            }
+            return response;
         } catch (error) {
             throw error;
         }
