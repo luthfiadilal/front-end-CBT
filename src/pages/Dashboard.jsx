@@ -15,18 +15,18 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl shadow-lg p-8 mb-8 text-white">
+            <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 text-white">
                 <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                        <Icon icon="solar:user-circle-bold" className="w-10 h-10 text-white" />
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                        <Icon icon="solar:user-circle-bold" className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold mb-1">
+                        <h2 className="text-xl sm:text-2xl font-bold mb-1">
                             Selamat Datang, {profile?.nama || user?.email || 'User'}!
                         </h2>
-                        <p className="text-green-100">
+                        <p className="text-green-100 text-sm sm:text-base">
                             Semangat belajar hari ini 🎓
                         </p>
                     </div>
@@ -34,8 +34,8 @@ export default function Dashboard() {
             </div>
 
             {/* Profile Info Card */}
-            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6 mb-6 sm:mb-8">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <Icon icon="solar:user-id-bold" className="w-5 h-5 text-orange-600 mr-2" />
                     Informasi Profil
                 </h3>
@@ -46,7 +46,7 @@ export default function Dashboard() {
                     </div>
                     <div className="p-4 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-600 mb-1">Email</p>
-                        <p className="font-semibold text-gray-900">{profile?.email || user?.email || '-'}</p>
+                        <p className="font-semibold text-gray-900 text-sm break-all">{profile?.email || user?.email || '-'}</p>
                     </div>
                     {profile?.nis && (
                         <div className="p-4 bg-gray-50 rounded-lg">
@@ -88,7 +88,7 @@ export default function Dashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer">
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
