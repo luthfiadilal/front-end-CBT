@@ -32,7 +32,7 @@ const MainLayout = ({ children }) => {
                 pt-16 lg:pt-0
                 ${isOpen ? 'lg:ml-64' : 'lg:ml-20'}
             `}>
-                <div className="min-h-screen">
+                <div className="min-h-screen p-6 lg:p-8">
                     {children}
                 </div>
             </main>

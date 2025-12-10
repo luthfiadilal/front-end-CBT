@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import Users from './pages/admin/Users';
 import NotFound from './pages/NotFound';
 
 // Protected Route Component
@@ -65,6 +66,18 @@ function App() {
                 <ProtectedRoute>
                   <MainLayout>
                     <Profile />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Routes */}
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Users />
                   </MainLayout>
                 </ProtectedRoute>
               }
