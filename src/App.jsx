@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Users from './pages/admin/Users';
+import Kriteria from './pages/admin/Kriteria';
 import NotFound from './pages/NotFound';
 
 // Protected Route Component
@@ -78,6 +79,16 @@ function App() {
                 <ProtectedRoute>
                   <MainLayout>
                     <Users />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/kriteria"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Kriteria />
                   </MainLayout>
                 </ProtectedRoute>
               }

@@ -4,7 +4,7 @@ const userService = {
     // Get all users
     async getAllUsers() {
         try {
-            const response = await api.get('/users');
+            const response = await api.get('cbt/users');
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
@@ -14,7 +14,7 @@ const userService = {
     // Create user (Admin only)
     async createUser(userData) {
         try {
-            const response = await api.post('/users', userData);
+            const response = await api.post('cbt/users', userData);
             return response.data;
         } catch (error) {
             throw error.response?.data || error.message;
