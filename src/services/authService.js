@@ -77,6 +77,33 @@ const authService = {
         }
     },
 
+
+    // Update profile
+    async updateProfile(profileData) {
+        try {
+            // ProfileData should be FormData object
+            const response = await api.put('/profile', profileData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.data.data) {
+                // Update local storage with new user/profile data
+                if (response.data.data.user) {
+                    localStorage.setItem('user', JSON.stringify(response.data.data.user));
+                }
+                if (response.data.data.profile) {
+                    localStorage.setItem('profile', JSON.stringify(response.data.data.profile));
+                }
+            }
+
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
+    },
+
     // Check if user is authenticated
     isAuthenticated() {
         return !!this.getToken();

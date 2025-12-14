@@ -5,13 +5,19 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Check if user is logged in on mount
         const currentUser = authService.getCurrentUser();
+        const currentProfile = JSON.parse(localStorage.getItem('profile'));
+
         if (currentUser) {
             setUser(currentUser);
+        }
+        if (currentProfile) {
+            setProfile(currentProfile);
         }
         setLoading(false);
     }, []);
@@ -23,6 +29,9 @@ export const AuthProvider = ({ children }) => {
             if (response.data?.user) {
                 setUser(response.data.user);
             }
+            if (response.data?.profile) {
+                setProfile(response.data.profile);
+            }
             return response;
         } catch (error) {
             throw error;
@@ -32,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         authService.logout();
         setUser(null);
+        setProfile(null);
     };
 
     const register = async (userData) => {
@@ -41,6 +51,9 @@ export const AuthProvider = ({ children }) => {
             if (response.data?.user) {
                 setUser(response.data.user);
             }
+            if (response.data?.profile) {
+                setProfile(response.data.profile);
+            }
             return response;
         } catch (error) {
             throw error;
@@ -49,6 +62,7 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         user,
+        profile,
         login,
         logout,
         register,

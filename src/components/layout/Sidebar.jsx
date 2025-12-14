@@ -33,6 +33,7 @@ const Sidebar = () => {
             { path: '/admin/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
             { path: '/admin/exams', label: 'Exams', icon: 'solar:clipboard-list-bold' },
             { path: '/admin/exam-attempts', label: 'Exams Attemps', icon: 'solar:history-bold' },
+            { path: '/profile', label: 'Profile', icon: 'solar:user-bold' },
         ],
         teacher: [
             { path: '/teacher/students', label: 'User Siswa', icon: 'solar:user-id-bold' },
