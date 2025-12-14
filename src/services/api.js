@@ -27,12 +27,43 @@ api.interceptors.request.use(
 // Response interceptor for error handling
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
+        const originalRequest = error.config;
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            try {
+                const refreshToken = authService.getRefreshToken();
+                if (refreshToken) {
+                    const response = await axios.post(`${API_BASE_URL}/refresh-token`, {
+                        refresh_token: refreshToken
+                    });
+
+                    const { token, refresh_token: newRefreshToken } = response.data.data;
+
+                    authService.setTokens(token, newRefreshToken);
+
+                    // Update header in the original request
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+
+                    // Retry the original request
+                    return api(originalRequest);
+                }
+            } catch (refreshError) {
+                // If refresh fails, fully logout
+                await authService.logout();
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
+            }
+        }
+
+        // If 401 and no retry or retry failed already
         if (error.response?.status === 401) {
-            // Unauthorized - clear token and redirect to login
-            authService.logout();
+            await authService.logout();
             window.location.href = '/login';
         }
+
         return Promise.reject(error);
     }
 );

@@ -28,7 +28,8 @@ const Sidebar = () => {
                     { path: '/admin/kriteria', label: 'All Kriteria' },
                 ]
             },
-            { path: '/admin/questions/create', label: 'Question', icon: 'solar:question-circle-bold' },
+            { path: '/admin/questions', label: 'All Questions', icon: 'solar:question-circle-bold' },
+            { path: '/admin/questions/create', label: 'Create Question', icon: 'solar:add-circle-bold' },
             { path: '/admin/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
             { path: '/admin/exams', label: 'Exams', icon: 'solar:clipboard-list-bold' },
             { path: '/admin/exam-attempts', label: 'Exams Attemps', icon: 'solar:history-bold' },

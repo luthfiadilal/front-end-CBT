@@ -1,33 +1,21 @@
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/cbt';
+import api from './api';
 
 export const getExams = async () => {
-    try {
-        const response = await fetch(`${API_URL}/exams`);
-        if (!response.ok) throw new Error('Failed to fetch exams');
-        return await response.json();
-    } catch (error) {
-        throw error;
-    }
+    const response = await api.get('/exams');
+    return response.data;
+};
+
+export const getAllQuestions = async () => {
+    const response = await api.get('/questions');
+    return response.data;
 };
 
 export const createQuestion = async (questionData) => {
-    try {
-        const response = await fetch(`${API_URL}/questions`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(questionData),
-        });
+    // Check if questionData is FormData
+    const isFormData = questionData instanceof FormData;
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to create question');
-        }
-
-        return await response.json();
-    } catch (error) {
-        throw error;
-    }
+    const response = await api.post('/questions', questionData, {
+        headers: isFormData ? { 'Content-Type': 'multipart/form-data' } : {},
+    });
+    return response.data;
 };

@@ -2,26 +2,50 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { getExams, createQuestion } from '../../services/questionService';
-import MainLayout from '../../components/layout/MainLayout';
-import Button from '../../components/common/Button';
+import kriteriaService from '../../services/kriteriaService';
+
 
 const CreateQuestion = () => {
     const navigate = useNavigate();
     const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Form State
+    const [difficultyLevels, setDifficultyLevels] = useState([]);
+    // Form State	
     const [examId, setExamId] = useState('');
     const [questionText, setQuestionText] = useState('');
-    const [difficulty, setDifficulty] = useState('1');
+    const [selectedDifficultyId, setSelectedDifficultyId] = useState(''); // Store ID here	
     const [maxPoint, setMaxPoint] = useState('5');
+
+    // Image State
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+
     const [options, setOptions] = useState([
         { option_text: '', is_correct: false },
         { option_text: '', is_correct: false },
     ]);
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            const previewUrl = URL.createObjectURL(file);
+            setImagePreview(previewUrl);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setImageFile(null);
+        if (imagePreview) {
+            URL.revokeObjectURL(imagePreview);
+            setImagePreview(null);
+        }
+    };
+
     useEffect(() => {
         fetchExams();
+        fetchDifficulties();
     }, []);
 
     const fetchExams = async () => {
@@ -31,6 +55,25 @@ const CreateQuestion = () => {
             if (data.length > 0) setExamId(data[0].id);
         } catch (error) {
             console.error('Failed to fetch exams', error);
+        }
+    };
+
+    const fetchDifficulties = async () => {
+        try {
+            const response = await kriteriaService.getAllTingkatKesulitan();
+            // Check if response has data property (standard API wrapper)
+            const levels = response.data || response;
+
+            if (levels && Array.isArray(levels)) {
+                setDifficultyLevels(levels);
+                if (levels.length > 0) setSelectedDifficultyId(levels[0].id);
+            } else {
+                console.warn('Difficulty levels data is not an array:', response);
+                setDifficultyLevels([]);
+            }
+        } catch (error) {
+            console.error('Failed to fetch difficulty levels', error);
+            setDifficultyLevels([]);
         }
     };
 
@@ -68,18 +111,28 @@ const CreateQuestion = () => {
                 return;
             }
 
-            const payload = {
-                exam_id: examId,
-                question_text: questionText,
-                difficulty_level: parseInt(difficulty),
-                max_point: parseInt(maxPoint),
-                question_type: 'mcq',
-                options: options.filter(o => o.option_text.trim() !== '')
-            };
+            // Find selected difficulty object to get bobot	
+            const selectedDiff = difficultyLevels.find(d => d.id == selectedDifficultyId);
+            const bobot = selectedDiff ? parseInt(selectedDiff.bobot) : 1; // Default to 1 if not found	
 
-            await createQuestion(payload);
+            const formData = new FormData();
+            formData.append('exam_id', examId);
+            formData.append('question_text', questionText);
+            formData.append('difficulty_level', bobot);
+            formData.append('max_point', parseInt(maxPoint));
+            formData.append('question_type', 'mcq');
+
+            // Append options as JSON string
+            const cleanedOptions = options.filter(o => o.option_text.trim() !== '');
+            formData.append('options', JSON.stringify(cleanedOptions));
+
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+
+            await createQuestion(formData);
             navigate('/admin/questions');
-            // Ideally navigate to a questions list, for now assume back to a safe place or stay
+            // Ideally navigate to a questions list, for now assume back to a safe place or stay	
             alert('Question created successfully!');
         } catch (error) {
             alert(error.message);
@@ -141,6 +194,42 @@ const CreateQuestion = () => {
                             />
                         </div>
 
+                        {/* Image Upload */}
+                        <div className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700">Question Image (Optional)</label>
+                            <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative overflow-hidden">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                />
+                                {imagePreview ? (
+                                    <div className="relative w-full">
+                                        <img src={imagePreview} alt="Preview" className="max-h-64 mx-auto rounded-lg object-contain" />
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleRemoveImage();
+                                            }}
+                                            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors z-10"
+                                        >
+                                            <Icon icon="solar:trash-bin-trash-bold" className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="text-center pointer-events-none">
+                                        <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Icon icon="solar:gallery-add-bold" className="w-6 h-6" />
+                                        </div>
+                                        <p className="text-sm font-medium text-gray-900">Click to upload image</p>
+                                        <p className="text-xs text-gray-500 mt-1">SVG, PNG, JPG or GIF (max. 5MB)</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Difficulty */}
                             <div className="space-y-2">
@@ -148,12 +237,14 @@ const CreateQuestion = () => {
                                 <div className="relative">
                                     <select
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition appearance-none"
-                                        value={difficulty}
-                                        onChange={(e) => setDifficulty(e.target.value)}
+                                        value={selectedDifficultyId}
+                                        onChange={(e) => setSelectedDifficultyId(e.target.value)}
                                     >
-                                        <option value="1">Easy (1)</option>
-                                        <option value="2">Medium (2)</option>
-                                        <option value="3">Hard (3)</option>
+                                        {difficultyLevels.map((diff) => (
+                                            <option key={diff.id} value={diff.id}>
+                                                {diff.kriteria}
+                                            </option>
+                                        ))}
                                     </select>
                                     <Icon icon="solar:alt-arrow-down-bold" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                 </div>

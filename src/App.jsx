@@ -9,6 +9,9 @@ import Profile from './pages/Profile';
 import Users from './pages/admin/Users';
 import Kriteria from './pages/admin/Kriteria';
 import CreateQuestion from './pages/admin/CreateQuestion';
+import QuestionList from './pages/admin/QuestionList';
+import ExamList from './pages/admin/ExamList';
+import ExamForm from './pages/admin/ExamForm';
 import NotFound from './pages/NotFound';
 
 // Protected Route Component
@@ -102,6 +105,49 @@ function App() {
                     <CreateQuestion />
                   </MainLayout>
                 </ProtectedRoute>
+
+              }
+            />
+            <Route
+              path="/admin/questions"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <QuestionList />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Exam Management Routes */}
+            <Route
+              path="/admin/exams"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ExamList />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/exams/create"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ExamForm />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/exams/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ExamForm />
+                  </MainLayout>
+                </ProtectedRoute>
               }
             />
 
@@ -110,7 +156,7 @@ function App() {
           </Routes>
         </SidebarProvider>
       </AuthProvider>
-    </Router>
+    </Router >
   );
 }
 
