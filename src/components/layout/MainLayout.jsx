@@ -6,9 +6,9 @@ const MainLayout = ({ children }) => {
     const { isOpen, setIsOpen } = useSidebar();
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-brand-green">
             {/* Mobile Header with Hamburger */}
-            <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-10 flex items-center px-4">
+            <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-brand-green border-b border-gray-200 z-10 flex items-center px-4">
                 <button
                     onClick={() => setIsOpen(true)}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"

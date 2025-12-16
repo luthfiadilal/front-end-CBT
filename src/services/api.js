@@ -24,6 +24,22 @@ api.interceptors.request.use(
     }
 );
 
+// Variables to handle concurrency
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+
+    failedQueue = [];
+};
+
 // Response interceptor for error handling
 api.interceptors.response.use(
     (response) => response,
@@ -31,7 +47,20 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {
+
+            if (isRefreshing) {
+                return new Promise(function (resolve, reject) {
+                    failedQueue.push({ resolve, reject });
+                }).then(token => {
+                    originalRequest.headers.Authorization = 'Bearer ' + token;
+                    return api(originalRequest);
+                }).catch(err => {
+                    return Promise.reject(err);
+                });
+            }
+
             originalRequest._retry = true;
+            isRefreshing = true;
 
             try {
                 const refreshToken = authService.getRefreshToken();
@@ -47,21 +76,30 @@ api.interceptors.response.use(
                     // Update header in the original request
                     originalRequest.headers.Authorization = `Bearer ${token}`;
 
+                    // Process the queue
+                    processQueue(null, token);
+
                     // Retry the original request
                     return api(originalRequest);
+                } else {
+                    throw new Error("No refresh token available");
                 }
             } catch (refreshError) {
-                // If refresh fails, fully logout
+                // If refresh fails, reject all queued requests and logout
+                processQueue(refreshError, null);
+
                 await authService.logout();
                 window.location.href = '/login';
                 return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
             }
         }
 
-        // If 401 and no retry or retry failed already
-        if (error.response?.status === 401) {
-            await authService.logout();
-            window.location.href = '/login';
+        // If 401 and no retry or retry failed already (and not handled by refresh logic above)
+        if (error.response?.status === 401 && !originalRequest._ignore401) {
+            // Only redirect if we haven't just tried to refresh
+            // The catch block above handles the refresh failure redirect
         }
 
         return Promise.reject(error);

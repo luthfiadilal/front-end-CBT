@@ -20,33 +20,34 @@ const Sidebar = () => {
 
     const roleMenus = {
         admin: [
-            { path: '/admin/users', label: 'User All', icon: 'solar:users-group-rounded-bold' },
+            { path: '/admin/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
             {
-                label: 'Kriterial',
+                label: 'Kelola Kriteria',
                 icon: 'solar:list-check-bold',
                 children: [
                     { path: '/admin/kriteria', label: 'All Kriteria' },
                 ]
             },
-            { path: '/admin/questions', label: 'All Questions', icon: 'solar:question-circle-bold' },
-            { path: '/admin/questions/create', label: 'Create Question', icon: 'solar:add-circle-bold' },
+            { path: '/admin/questions', label: 'Kelola Soal', icon: 'solar:question-circle-bold' },
             { path: '/admin/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
-            { path: '/admin/exams', label: 'Exams', icon: 'solar:clipboard-list-bold' },
-            { path: '/admin/exam-attempts', label: 'Exams Attemps', icon: 'solar:history-bold' },
-            { path: '/profile', label: 'Profile', icon: 'solar:user-bold' },
+            { path: '/admin/exams', label: 'Kelola Latihan', icon: 'solar:clipboard-list-bold' },
+            { path: '/admin/exam-attempts', label: 'Latihan Siswa', icon: 'solar:history-bold' },
+            { path: '/profile', label: 'Akun', icon: 'solar:user-bold' },
         ],
         teacher: [
-            { path: '/teacher/students', label: 'User Siswa', icon: 'solar:user-id-bold' },
+            { path: '/teacher/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
             {
-                label: 'Question',
-                icon: 'solar:question-circle-bold',
+                label: 'Kelola Kriteria',
+                icon: 'solar:list-check-bold',
                 children: [
-                    { path: '/teacher/questions', label: 'Question Option' },
+                    { path: '/teacher/kriteria', label: 'All Kriteria' },
                 ]
             },
-            { path: '/teacher/grades', label: 'Nilai', icon: 'solar:chart-square-bold' },
+            { path: '/teacher/questions', label: 'Kelola Soal', icon: 'solar:question-circle-bold' },
             { path: '/teacher/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
-            { path: '/profile', label: 'Profile', icon: 'solar:user-bold' },
+            { path: '/teacher/exams', label: 'Kelola Latihan', icon: 'solar:clipboard-list-bold' },
+            { path: '/teacher/exam-attempts', label: 'Latihan Siswa', icon: 'solar:history-bold' },
+            { path: '/profile', label: 'Akun', icon: 'solar:user-bold' },
         ],
         siswa: [
             { path: '/dashboard', label: 'Dashboard', icon: 'solar:widget-bold' },

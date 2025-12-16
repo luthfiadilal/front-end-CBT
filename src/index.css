@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-green: #008542;
+  --color-brand-orange: #f7941e;
+}
+
 @layer utilities {
 
   /* Animation for blob effect */

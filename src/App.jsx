@@ -6,13 +6,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
-import Users from './pages/admin/Users';
-import Kriteria from './pages/admin/Kriteria';
-import CreateQuestion from './pages/admin/CreateQuestion';
-import QuestionList from './pages/admin/QuestionList';
-import ExamList from './pages/admin/ExamList';
-import ExamForm from './pages/admin/ExamForm';
+
 import NotFound from './pages/NotFound';
+import Users from './pages/teacher/Users';
+import Kriteria from './pages/teacher/Kriteria';
+import CreateQuestion from './pages/teacher/CreateQuestion';
+import QuestionList from './pages/teacher/QuestionList';
+import ExamList from './pages/teacher/ExamList';
+import ExamForm from './pages/teacher/ExamForm';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -76,9 +77,11 @@ function App() {
               }
             />
 
-            {/* Admin Routes */}
+
+
+            {/* Teacher Routes */}
             <Route
-              path="/admin/users"
+              path="/teacher/users"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -88,7 +91,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/kriteria"
+              path="/teacher/kriteria"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -98,7 +101,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/questions/create"
+              path="/teacher/questions/create"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -109,7 +112,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/questions"
+              path="/teacher/questions"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -121,7 +124,7 @@ function App() {
 
             {/* Exam Management Routes */}
             <Route
-              path="/admin/exams"
+              path="/teacher/exams"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -131,7 +134,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/exams/create"
+              path="/teacher/exams/create"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -141,7 +144,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/exams/edit/:id"
+              path="/teacher/exams/edit/:id"
               element={
                 <ProtectedRoute>
                   <MainLayout>
