@@ -112,6 +112,16 @@ function App() {
               }
             />
             <Route
+              path="/teacher/questions/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <CreateQuestion />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/teacher/questions"
               element={
                 <ProtectedRoute>

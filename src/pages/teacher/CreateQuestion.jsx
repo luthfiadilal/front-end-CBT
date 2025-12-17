@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { getExams, createQuestion } from '../../services/questionService';
+import { getExams, createQuestion, updateQuestion, getQuestionById, getQuestionPairGroups } from '../../services/questionService';
 import kriteriaService from '../../services/kriteriaService';
 
 
 const CreateQuestion = () => {
     const navigate = useNavigate();
+    const { id } = useParams(); // Get ID from URL for edit mode
+    const isEditMode = !!id;
+
     const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -16,10 +19,13 @@ const CreateQuestion = () => {
     const [questionText, setQuestionText] = useState('');
     const [selectedDifficultyId, setSelectedDifficultyId] = useState(''); // Store ID here	
     const [maxPoint, setMaxPoint] = useState('5');
+    const [pairGroup, setPairGroup] = useState(''); // New State for Pair Group
+    const [pairGroups, setPairGroups] = useState([]); // New State for Pair Group Suggestions
 
     // Image State
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const [existingImageUrl, setExistingImageUrl] = useState(null); // For edit mode
 
     const [options, setOptions] = useState([
         { option_text: '', is_correct: false },
@@ -41,18 +47,23 @@ const CreateQuestion = () => {
             URL.revokeObjectURL(imagePreview);
             setImagePreview(null);
         }
+        setExistingImageUrl(null); // Also clear existing image on remove
     };
 
+    // Fetch pair groups whenever examId changes
     useEffect(() => {
-        fetchExams();
-        fetchDifficulties();
-    }, []);
+        if (examId) {
+            fetchPairGroups(examId);
+        } else {
+            setPairGroups([]);
+        }
+    }, [examId]);
 
     const fetchExams = async () => {
         try {
             const data = await getExams();
             setExams(data);
-            if (data.length > 0) setExamId(data[0].id);
+            if (!isEditMode && data.length > 0) setExamId(data[0].id);
         } catch (error) {
             console.error('Failed to fetch exams', error);
         }
@@ -66,14 +77,77 @@ const CreateQuestion = () => {
 
             if (levels && Array.isArray(levels)) {
                 setDifficultyLevels(levels);
-                if (levels.length > 0) setSelectedDifficultyId(levels[0].id);
+                if (!isEditMode && levels.length > 0) setSelectedDifficultyId(levels[0].id);
+                return levels;
             } else {
                 console.warn('Difficulty levels data is not an array:', response);
                 setDifficultyLevels([]);
             }
+            return [];
         } catch (error) {
             console.error('Failed to fetch difficulty levels', error);
             setDifficultyLevels([]);
+            return [];
+        }
+    };
+
+    // Revised init
+    useEffect(() => {
+        const initData = async () => {
+            await fetchExams();
+            const levels = await fetchDifficulties();
+
+            if (isEditMode) {
+                try {
+                    setLoading(true);
+                    const data = await getQuestionById(id);
+
+                    setExamId(data.exam_id);
+                    setQuestionText(data.question_text);
+                    setMaxPoint(data.max_point);
+                    setPairGroup(data.pair_group || '');
+
+                    if (data.image_url) {
+                        setExistingImageUrl(data.image_url);
+                        setImagePreview(data.image_url);
+                    }
+
+                    if (data.question_options) {
+                        setOptions(data.question_options.map(opt => ({
+                            option_text: opt.option_text,
+                            is_correct: opt.is_correct
+                        })));
+                    }
+
+                    // Match difficulty
+                    // Data has `difficulty_level` (integer score). Levels have `bobot` (string/int) and `id`.
+                    // We need to find level where level.bobot == data.difficulty_level
+                    if (levels.length > 0) {
+                        const matched = levels.find(l => parseInt(l.bobot) === data.difficulty_level);
+                        if (matched) {
+                            setSelectedDifficultyId(matched.id);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch question details', err);
+                    alert('Failed to load question details.');
+                    navigate('/teacher/questions');
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+        initData();
+    }, [id]); // Only runs on mount or ID change
+
+    const fetchPairGroups = async (id) => {
+        try {
+            const groups = await getQuestionPairGroups(id);
+            if (Array.isArray(groups)) {
+                setPairGroups(groups);
+            }
+        } catch (error) {
+            console.error('Failed to fetch pair groups', error);
         }
     };
 
@@ -122,18 +196,32 @@ const CreateQuestion = () => {
             formData.append('max_point', parseInt(maxPoint));
             formData.append('question_type', 'mcq');
 
+            // Append pair_group if it exists
+            if (pairGroup && pairGroup.trim() !== '') {
+                formData.append('pair_group', pairGroup.trim());
+            }
+
             // Append options as JSON string
             const cleanedOptions = options.filter(o => o.option_text.trim() !== '');
             formData.append('options', JSON.stringify(cleanedOptions));
 
             if (imageFile) {
                 formData.append('image', imageFile);
+            } else if (isEditMode && existingImageUrl === null) {
+                // If in edit mode and image was removed (existingImageUrl is null),
+                // explicitly tell backend to remove it.
+                formData.append('remove_image', 'true');
             }
 
-            await createQuestion(formData);
+
+            if (isEditMode) {
+                await updateQuestion(id, formData);
+                alert('Question updated successfully!');
+            } else {
+                await createQuestion(formData);
+                alert('Question created successfully!');
+            }
             navigate('/teacher/questions');
-            // Ideally navigate to a questions list, for now assume back to a safe place or stay	
-            alert('Question created successfully!');
         } catch (error) {
             alert(error.message);
         } finally {
@@ -147,8 +235,8 @@ const CreateQuestion = () => {
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Create Question</h1>
-                    <p className="text-gray-500 mt-1">Add a new question to an exam</p>
+                    <h1 className="text-2xl font-bold text-gray-900">{isEditMode ? 'Edit Question' : 'Create Question'}</h1>
+                    <p className="text-gray-500 mt-1">{isEditMode ? 'Update question details' : 'Add a new question to an exam'}</p>
                 </div>
                 <button
                     onClick={() => navigate(-1)}
@@ -179,6 +267,27 @@ const CreateQuestion = () => {
                                     ))}
                                 </select>
                                 <Icon icon="solar:alt-arrow-down-bold" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                            </div>
+                        </div>
+
+                        {/* Pair Group Selection */}
+                        <div className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700">Pair Group (Optional)</label>
+                            <p className="text-xs text-gray-500">Group questions that belong to the same context (e.g. Reading Passage)</p>
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    list="pair-groups-list"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
+                                    placeholder="Select existing or type new group name..."
+                                    value={pairGroup}
+                                    onChange={(e) => setPairGroup(e.target.value)}
+                                />
+                                <datalist id="pair-groups-list">
+                                    {pairGroups.map((group, index) => (
+                                        <option key={index} value={group} />
+                                    ))}
+                                </datalist>
                             </div>
                         </div>
 
@@ -332,10 +441,10 @@ const CreateQuestion = () => {
                                 {loading ? (
                                     <>
                                         <Icon icon="svg-spinners:ring-resize" className="w-5 h-5" />
-                                        <span>Saving...</span>
+                                        <span>{isEditMode ? 'Updating...' : 'Saving...'}</span>
                                     </>
                                 ) : (
-                                    <span>Save Question</span>
+                                    <span>{isEditMode ? 'Update Question' : 'Save Question'}</span>
                                 )}
                             </button>
                         </div>

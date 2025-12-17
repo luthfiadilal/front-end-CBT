@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { getAllQuestions } from '../../services/questionService';
+import { getAllQuestions, deleteQuestion } from '../../services/questionService';
 
 const QuestionList = () => {
     const navigate = useNavigate();
@@ -35,6 +35,33 @@ const QuestionList = () => {
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedQuestion(null);
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm('Are you sure you want to delete this question?')) {
+            try {
+                // Assuming deleteQuestion is imported from service. Need to import it!
+                // Let's add the import in the next step or assume it is available if I update the import line.
+                // Note: I will update the import line as well in a separate or same call if possible.
+                // Since I can only do one block, I will assume the import is updated or I will updat it separately.
+                // I will assume I need to update imports.
+                // Wait, I can't easily update imports AND this block if they are far apart.
+                // I'll update this block first, then imports.
+
+                // Oops, I need to call the service.
+                // await deleteQuestion(id); 
+                // We need to import deleteQuestion.
+                // I will just write the function usage here and update imports next.
+
+                // Actually, I can't call it if it's not imported.
+                // But this tool call is just text replacement.
+                await deleteQuestion(id);
+                fetchQuestions(); // Refresh list
+            } catch (error) {
+                console.error('Failed to delete question', error);
+                alert('Failed to delete question');
+            }
+        }
     };
 
     // Calculate unique exams from the questions list
@@ -125,13 +152,29 @@ const QuestionList = () => {
                                             {item.difficulty_level}
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <button
-                                                onClick={() => handleViewDetail(item)}
-                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                title="View Detail"
-                                            >
-                                                <Icon icon="solar:eye-bold" className="w-5 h-5" />
-                                            </button>
+                                            <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    onClick={() => handleViewDetail(item)}
+                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                    title="View Detail"
+                                                >
+                                                    <Icon icon="solar:eye-bold" className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => navigate(`/teacher/questions/edit/${item.id}`)}
+                                                    className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                                                    title="Edit Question"
+                                                >
+                                                    <Icon icon="solar:pen-bold" className="w-5 h-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(item.id)}
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                    title="Delete Question"
+                                                >
+                                                    <Icon icon="solar:trash-bin-trash-bold" className="w-5 h-5" />
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -160,15 +203,19 @@ const QuestionList = () => {
                                     <p className="font-semibold text-gray-900">{selectedQuestion.exams?.title || '-'}</p>
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl">
+                                    <p className="text-sm text-gray-500 mb-1">Pair Group</p>
+                                    <p className="font-semibold text-gray-900">{selectedQuestion.pair_group || '-'}</p>
+                                </div>
+                                <div className="p-4 bg-gray-50 rounded-xl col-span-2">
                                     <p className="text-sm text-gray-500 mb-1">Details</p>
-                                    <div className="flex gap-4">
+                                    <div className="flex gap-8">
                                         <div>
                                             <span className="text-xs text-gray-400 block">Difficulty</span>
-                                            <span className="font-medium">{selectedQuestion.difficulty_level}</span>
+                                            <span className="font-medium text-gray-900">{selectedQuestion.difficulty_level}</span>
                                         </div>
                                         <div>
                                             <span className="text-xs text-gray-400 block">Points</span>
-                                            <span className="font-medium">{selectedQuestion.max_point}</span>
+                                            <span className="font-medium text-gray-900">{selectedQuestion.max_point}</span>
                                         </div>
                                     </div>
                                 </div>
