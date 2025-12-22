@@ -2,12 +2,19 @@ import { useState, useEffect } from 'react';
 import userService from '../../services/userService';
 import { Icon } from '@iconify/react';
 import CreateUserModal from '../../components/admin/CreateUserModal';
+import ConfirmationModal from '../../components/common/ConfirmationModal';
 
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [userToEdit, setUserToEdit] = useState(null);
+
+    // Delete Confirmation State
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         fetchUsers();
@@ -18,6 +25,7 @@ const Users = () => {
             setLoading(true);
             const response = await userService.getAllUsers();
             if (response.success) {
+                console.log('Fetched users:', response.data);
                 setUsers(response.data);
             }
         } catch (err) {
@@ -29,6 +37,42 @@ const Users = () => {
 
     const handleCreateSuccess = () => {
         fetchUsers();
+        setUserToEdit(null);
+    };
+
+    const handleEdit = (user) => {
+        setUserToEdit(user);
+        setIsCreateModalOpen(true);
+    };
+
+    const confirmDelete = (user) => {
+        setUserToDelete(user);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!userToDelete) return;
+
+        try {
+            setIsDeleting(true);
+            await userService.deleteUser(userToDelete.uid);
+
+            // Close modal and refresh list
+            setIsDeleteModalOpen(false);
+            setUserToDelete(null);
+            fetchUsers();
+        } catch (err) {
+            console.error(err);
+            // Optionally show error toast/alert here, existing error state handles main load errors
+            alert(err.message || 'Gagal menghapus user');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        setIsCreateModalOpen(false);
+        setUserToEdit(null);
     };
 
     if (loading && users.length === 0) {
@@ -70,7 +114,10 @@ const Users = () => {
                         </div>
                     </div>
                     <button
-                        onClick={() => setIsCreateModalOpen(true)}
+                        onClick={() => {
+                            setUserToEdit(null);
+                            setIsCreateModalOpen(true);
+                        }}
                         className="flex items-center gap-2 bg-brand-orange hover:bg-orange-600 text-white px-5 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
                     >
                         <Icon icon="solar:user-plus-bold" className="w-5 h-5" />
@@ -138,12 +185,22 @@ const Users = () => {
                                         </span>
                                     </td>
                                     <td className="px-8 py-4 text-right">
-                                        <button
-                                            className="p-2 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition-all duration-200 group-hover:shadow-sm"
-                                            title="Edit User"
-                                        >
-                                            <Icon icon="solar:pen-bold" className="w-5 h-5" />
-                                        </button>
+                                        <div className="flex items-center justify-end gap-2">
+                                            <button
+                                                onClick={() => handleEdit(user)}
+                                                className="p-2 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 group-hover:shadow-sm"
+                                                title="Edit User"
+                                            >
+                                                <Icon icon="solar:pen-bold" className="w-5 h-5" />
+                                            </button>
+                                            <button
+                                                onClick={() => confirmDelete(user)}
+                                                className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 group-hover:shadow-sm"
+                                                title="Hapus User"
+                                            >
+                                                <Icon icon="solar:trash-bin-trash-bold" className="w-5 h-5" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -166,9 +223,22 @@ const Users = () => {
             </div>
 
             <CreateUserModal
+                key={userToEdit ? userToEdit.uid : 'create-new'}
                 isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
+                onClose={handleModalClose}
                 onSuccess={handleCreateSuccess}
+                userToEdit={userToEdit}
+            />
+
+            <ConfirmationModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleDelete}
+                title="Hapus User"
+                message={`Anda yakin ingin menghapus user "${userToDelete?.nama}"? Tindakan ini tidak dapat dibatalkan.`}
+                confirmText="Hapus User"
+                variant="danger"
+                isLoading={isDeleting}
             />
         </div>
     );

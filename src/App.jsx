@@ -164,6 +164,17 @@ function App() {
               }
             />
 
+            <Route
+              path="teacher/dashboard"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Dashboard />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
             {/* 404 Page */}
             <Route path="*" element={<NotFound />} />
           </Routes>

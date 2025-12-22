@@ -103,7 +103,7 @@ const ExamList = () => {
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-2">
                                                 <button
-                                                    onClick={() => navigate(`/admin/exams/edit/${exam.id}`)}
+                                                    onClick={() => navigate(`/teacher/exams/edit/${exam.id}`)}
                                                     className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                     title="Edit"
                                                 >

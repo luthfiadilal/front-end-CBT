@@ -95,7 +95,7 @@ const ExamForm = () => {
                     <p className="text-gray-500 mt-1">{isEditMode ? 'Update exam details' : 'Set up a new examination'}</p>
                 </div>
                 <button
-                    onClick={() => navigate('/admin/exams')}
+                    onClick={() => navigate('/teacher/exams')}
                     className="flex items-center gap-2 px-5 py-2.5 bg-white text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm font-medium"
                 >
                     <Icon icon="solar:arrow-left-bold" className="w-5 h-5" />

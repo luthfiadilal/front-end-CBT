@@ -1,22 +1,49 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import userService from '../../services/userService';
 
-const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
+// Move initialFormState outside component to prevent recreation on every render
+const initialFormState = {
+    nama: '',
+    email: '',
+    password: '',
+    nis: '',
+    kelas: '',
+    tanggal_lahir: '',
+    alamat: '',
+    nip: ''
+};
+
+const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
+    const isEditMode = !!userToEdit;
     const [role, setRole] = useState('siswa');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [formData, setFormData] = useState(initialFormState);
 
-    const [formData, setFormData] = useState({
-        nama: '',
-        email: '',
-        password: '',
-        nis: '',
-        kelas: '',
-        tanggal_lahir: '',
-        alamat: '',
-        nip: ''
-    });
+    useEffect(() => {
+        if (isOpen) {
+            if (userToEdit) {
+                setRole(userToEdit.role);
+                setFormData({
+                    nama: userToEdit.nama || '',
+                    email: userToEdit.email || '',
+                    password: '', // Password usually blank on edit
+                    nis: userToEdit.nis || '',
+                    kelas: userToEdit.kelas || '',
+                    tanggal_lahir: userToEdit.tanggal_lahir || '',
+                    alamat: userToEdit.alamat || '',
+                    nip: userToEdit.nip || ''
+                });
+            } else {
+                setRole('siswa');
+                setFormData(initialFormState);
+            }
+            setError(null);
+        }
+    }, [isOpen, userToEdit]);
+
+
 
     if (!isOpen) return null;
 
@@ -39,27 +66,27 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
         setError(null);
 
         try {
-            await userService.createUser({
+            const dataToSubmit = {
                 role,
                 ...formData
-            });
+            };
+
+            // Remove empty password if editing (so it doesn't overwrite with empty string)
+            if (isEditMode && !dataToSubmit.password) {
+                delete dataToSubmit.password;
+            }
+
+            if (isEditMode) {
+                await userService.updateUser(userToEdit.uid, dataToSubmit);
+            } else {
+                await userService.createUser(dataToSubmit);
+            }
+
             onSuccess();
             onClose();
-            // Reset form
-            setFormData({
-                nama: '',
-                email: '',
-                password: '',
-                nis: '',
-                kelas: '',
-                tanggal_lahir: '',
-                alamat: '',
-                nip: ''
-            });
-            setRole('siswa');
         } catch (err) {
             console.error(err);
-            setError(err.message || 'Gagal membuat user');
+            setError(err.message || `Gagal ${isEditMode ? 'mengupdate' : 'membuat'} user`);
         } finally {
             setLoading(false);
         }
@@ -70,7 +97,9 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
             <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl overflow-hidden select-none">
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-                    <h2 className="text-xl font-bold text-gray-900">Tambah User Baru</h2>
+                    <h2 className="text-xl font-bold text-gray-900">
+                        {isEditMode ? 'Edit User' : 'Tambah User Baru'}
+                    </h2>
                     <button
                         onClick={onClose}
                         className="p-1 hover:bg-gray-200 rounded-lg transition-colors text-gray-500 hover:text-gray-700"
@@ -88,18 +117,21 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Role Selection */}
+                        {/* Role Selection - Disable on Edit usually, or allow? Let's allow but warn if needed. existing logic didn't forbid. */}
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">Role User</label>
                             <select
                                 value={role}
                                 onChange={handleRoleChange}
-                                className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all bg-white"
+                                disabled={isEditMode} // Usually safer to not allow role change easily without proper migration
+                                className={`w-full px-4 py-2.5 rounded-xl border border-gray-300 outline-none transition-all bg-white
+                                    ${isEditMode ? 'bg-gray-100 cursor-not-allowed text-gray-500' : 'text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500'}`}
                             >
                                 <option value="siswa">Siswa</option>
                                 <option value="teacher">Teacher</option>
                                 <option value="admin">Admin</option>
                             </select>
+                            {isEditMode && <p className="text-xs text-gray-400 mt-1">Role tidak dapat diubah saat edit.</p>}
                         </div>
 
                         {/* Common Fields */}
@@ -112,7 +144,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                     value={formData.nama}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                     placeholder="Masukkan nama lengkap"
                                 />
                             </div>
@@ -126,20 +158,22 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                         placeholder="email@sekolah.id"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Password {isEditMode && <span className="text-gray-400 font-normal">(Opsional)</span>}
+                                    </label>
                                     <input
                                         type="password"
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        required
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                                        placeholder="••••••••"
+                                        required={!isEditMode}
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                        placeholder={isEditMode ? "Biarkan kosong jika tetap" : "••••••••"}
                                     />
                                 </div>
                             </div>
@@ -161,7 +195,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                             value={formData.nis}
                                             onChange={handleChange}
                                             required
-                                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                             placeholder="Nomor Induk Siswa"
                                         />
                                     </div>
@@ -173,7 +207,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                             value={formData.kelas}
                                             onChange={handleChange}
                                             required
-                                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                             placeholder="Contoh: X IPA 1"
                                         />
                                     </div>
@@ -186,7 +220,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                         value={formData.tanggal_lahir}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                     />
                                 </div>
                                 <div>
@@ -197,7 +231,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                         onChange={handleChange}
                                         required
                                         rows="3"
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all resize-none"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all resize-none"
                                         placeholder="Alamat lengkap siswa"
                                     />
                                 </div>
@@ -218,7 +252,7 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                         value={formData.nip}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                                         placeholder="Nomor Induk Pegawai"
                                     />
                                 </div>
@@ -247,8 +281,8 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess }) => {
                                     </>
                                 ) : (
                                     <>
-                                        <Icon icon="solar:check-circle-bold" className="w-5 h-5" />
-                                        <span>Simpan User</span>
+                                        <Icon icon={isEditMode ? "solar:pen-bold" : "solar:check-circle-bold"} className="w-5 h-5" />
+                                        <span>{isEditMode ? 'Simpan Perubahan' : 'Simpan User'}</span>
                                     </>
                                 )}
                             </button>

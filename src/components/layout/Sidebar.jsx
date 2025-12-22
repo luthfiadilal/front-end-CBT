@@ -35,6 +35,7 @@ const Sidebar = () => {
             { path: '/profile', label: 'Akun', icon: 'solar:user-bold' },
         ],
         teacher: [
+
             { path: '/teacher/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
             {
                 label: 'Kelola Kriteria',
@@ -132,7 +133,14 @@ const Sidebar = () => {
                 {/* User Profile */}
                 {isOpen && (
                     <div className="p-4 border-b border-gray-200 flex-shrink-0">
-                        <div className="flex items-center gap-3">
+                        <div
+                            onClick={() => {
+                                const dashboardPath = userRole === 'teacher' ? '/teacher/dashboard' : '/dashboard';
+                                navigate(dashboardPath);
+                                if (window.innerWidth < 1024) closeSidebar();
+                            }}
+                            className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                        >
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center text-white font-semibold flex-shrink-0">
                                 {profile.nama?.charAt(0) || user?.email?.charAt(0) || 'U'}
                             </div>
