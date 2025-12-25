@@ -15,6 +15,10 @@ import QuestionList from './pages/teacher/QuestionList';
 import ExamList from './pages/teacher/ExamList';
 import ExamForm from './pages/teacher/ExamForm';
 
+// Student Pages
+import StudentExamList from './pages/student/StudentExamList';
+import TakeExam from './pages/student/TakeExam';
+
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -171,6 +175,26 @@ function App() {
                   <MainLayout>
                     <Dashboard />
                   </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Student Routes */}
+            <Route
+              path="/student/latihan"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <StudentExamList />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/latihan/take/:examId"
+              element={
+                <ProtectedRoute>
+                  <TakeExam />
                 </ProtectedRoute>
               }
             />

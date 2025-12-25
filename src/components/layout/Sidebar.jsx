@@ -19,21 +19,6 @@ const Sidebar = () => {
     // but the request specified distinct menus.
 
     const roleMenus = {
-        admin: [
-            { path: '/admin/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
-            {
-                label: 'Kelola Kriteria',
-                icon: 'solar:list-check-bold',
-                children: [
-                    { path: '/admin/kriteria', label: 'All Kriteria' },
-                ]
-            },
-            { path: '/admin/questions', label: 'Kelola Soal', icon: 'solar:question-circle-bold' },
-            { path: '/admin/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
-            { path: '/admin/exams', label: 'Kelola Latihan', icon: 'solar:clipboard-list-bold' },
-            { path: '/admin/exam-attempts', label: 'Latihan Siswa', icon: 'solar:history-bold' },
-            { path: '/profile', label: 'Akun', icon: 'solar:user-bold' },
-        ],
         teacher: [
 
             { path: '/teacher/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
