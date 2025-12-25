@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import examService from '../../services/examService';
 import examStudentService from '../../services/examStudentService';
+import authService from '../../services/authService';
 
 const TakeExam = () => {
     const { examId } = useParams();
@@ -16,33 +17,109 @@ const TakeExam = () => {
     const [timeRemaining, setTimeRemaining] = useState(0);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [examStartTime, setExamStartTime] = useState(null);
     const timerRef = useRef(null);
+    const hasInitialized = useRef(false); // Prevent double initialization
 
+    // Check for existing session on mount
     useEffect(() => {
-        initializeExam();
+        const sessionKey = `exam_session_${examId}`;
+        const existingSession = localStorage.getItem(sessionKey);
+
+        if (existingSession) {
+            const session = JSON.parse(existingSession);
+            console.log('Resuming existing exam session:', session);
+            // Resume existing session
+            setAttemptId(session.attemptId);
+            setExamStartTime(new Date(session.startTime));
+            loadExamData(session.attemptId);
+        } else if (!hasInitialized.current) {
+            hasInitialized.current = true;
+            initializeExam();
+        }
+
+        // Cleanup on unmount
         return () => {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
             }
         };
+    }, [examId]);
+
+    // Navigation prevention
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            e.preventDefault();
+            e.returnValue = 'Ujian sedang berlangsung! Yakin ingin keluar?';
+            return e.returnValue;
+        };
+
+        const handlePopState = (e) => {
+            if (!window.confirm('Ujian sedang berlangsung! Yakin ingin keluar?')) {
+                window.history.pushState(null, '', window.location.href);
+            }
+        };
+
+        // Add event listeners
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        window.addEventListener('popstate', handlePopState);
+
+        // Push initial state to prevent back
+        window.history.pushState(null, '', window.location.href);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('popstate', handlePopState);
+        };
     }, []);
 
-    const initializeExam = async () => {
+    const loadExamData = async (attemptId) => {
         try {
+            setLoading(true);
+
             // Get exam details
             const examData = await examService.getExamById(examId);
             setExam(examData);
 
-            // Start exam attempt
+            // Get questions
+            const questionsData = await examStudentService.getExamQuestions(examId);
+            setQuestions(questionsData.questions || questionsData);
+
+            setLoading(false);
+        } catch (error) {
+            console.error('Failed to load exam data:', error);
+            alert('Gagal memuat data ujian.');
+            navigate('/student/latihan');
+        }
+    };
+
+    const initializeExam = async () => {
+        try {
+            console.log('Initializing new exam session...');
+
+            // Get exam details
+            const examData = await examService.getExamById(examId);
+            setExam(examData);
+
+            // Start exam attempt - only once
             const startResponse = await examStudentService.startExam(examId);
-            setAttemptId(startResponse.attempt_id);
+            const attemptIdValue = startResponse.attempt_id;
+            const startTime = new Date();
+
+            setAttemptId(attemptIdValue);
+            setExamStartTime(startTime);
+
+            // Save to localStorage for persistence
+            const sessionKey = `exam_session_${examId}`;
+            localStorage.setItem(sessionKey, JSON.stringify({
+                attemptId: attemptIdValue,
+                startTime: startTime.toISOString(),
+                examId: examId
+            }));
 
             // Get questions
             const questionsData = await examStudentService.getExamQuestions(examId);
-            setQuestions(questionsData.questions || questionsData); // Handle both {questions: []} and direct array
-
-            // Initialize timer (convert minutes to seconds)
-            setTimeRemaining(examData.total_time_minutes * 60);
+            setQuestions(questionsData.questions || questionsData);
 
             setLoading(false);
         } catch (error) {
@@ -52,31 +129,51 @@ const TakeExam = () => {
         }
     };
 
-    // Timer countdown
+    // Timer calculation based on start time
     useEffect(() => {
-        if (timeRemaining > 0 && !loading) {
-            timerRef.current = setInterval(() => {
-                setTimeRemaining(prev => {
-                    if (prev <= 1) {
-                        clearInterval(timerRef.current);
-                        handleTimeUp();
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
+        if (!exam || !examStartTime || loading) return;
+
+        const calculateTimeRemaining = () => {
+            const now = new Date();
+            const elapsedSeconds = Math.floor((now - examStartTime) / 1000);
+            const totalSeconds = exam.total_time_minutes * 60;
+            const remaining = totalSeconds - elapsedSeconds;
+
+            return Math.max(0, remaining);
+        };
+
+        // Set initial time
+        const initialTime = calculateTimeRemaining();
+        setTimeRemaining(initialTime);
+
+        if (initialTime <= 0) {
+            handleTimeUp();
+            return;
         }
+
+        // Update timer every second
+        timerRef.current = setInterval(() => {
+            const remaining = calculateTimeRemaining();
+            setTimeRemaining(remaining);
+
+            if (remaining <= 0) {
+                clearInterval(timerRef.current);
+                handleTimeUp();
+            }
+        }, 1000);
 
         return () => {
             if (timerRef.current) {
                 clearInterval(timerRef.current);
             }
         };
-    }, [timeRemaining, loading]);
+    }, [exam, examStartTime, loading]);
 
     const handleTimeUp = () => {
+        const sessionKey = `exam_session_${examId}`;
+        localStorage.removeItem(sessionKey);
+
         alert('Waktu habis! Ujian akan diselesaikan.');
-        // Auto finish exam (optional - for now just navigate back)
         navigate('/student/latihan');
     };
 
@@ -125,11 +222,35 @@ const TakeExam = () => {
         }
     };
 
-    const handleFinishExam = () => {
+    const handleFinishExam = async () => {
         if (window.confirm('Apakah kamu yakin ingin menyelesaikan ujian?')) {
-            // Navigate back to exam list
-            // In future: call finishExam API
-            navigate('/student/latihan');
+            try {
+                setSubmitting(true);
+
+                // Call finishExam API
+                const user = authService.getCurrentUser();
+                const resultData = await examStudentService.finishExam(
+                    attemptId,
+                    user.id,
+                    examId
+                );
+
+                console.log('Exam finished successfully:', resultData);
+
+                // Clean up session
+                const sessionKey = `exam_session_${examId}`;
+                localStorage.removeItem(sessionKey);
+
+                // Navigate to results page with data
+                navigate('/student/latihan/result', {
+                    state: { resultData },
+                    replace: true
+                });
+            } catch (error) {
+                console.error('Failed to finish exam:', error);
+                alert('Gagal menyelesaikan ujian. Silakan coba lagi.');
+                setSubmitting(false);
+            }
         }
     };
 

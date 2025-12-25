@@ -14,10 +14,13 @@ import CreateQuestion from './pages/teacher/CreateQuestion';
 import QuestionList from './pages/teacher/QuestionList';
 import ExamList from './pages/teacher/ExamList';
 import ExamForm from './pages/teacher/ExamForm';
+import TeacherRanking from './pages/teacher/TeacherRanking';
 
 // Student Pages
 import StudentExamList from './pages/student/StudentExamList';
 import TakeExam from './pages/student/TakeExam';
+import ExamResult from './pages/student/ExamResult';
+import StudentRanking from './pages/student/StudentRanking';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -148,7 +151,7 @@ function App() {
               }
             />
             <Route
-              path="/teacher/exams/create"
+              path="/teacher/exam/create"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -157,12 +160,24 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
-              path="/teacher/exams/edit/:id"
+              path="/teacher/exam/edit/:examId"
               element={
                 <ProtectedRoute>
                   <MainLayout>
                     <ExamForm />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/teacher/ranking"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <TeacherRanking />
                   </MainLayout>
                 </ProtectedRoute>
               }
@@ -195,6 +210,39 @@ function App() {
               element={
                 <ProtectedRoute>
                   <TakeExam />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/student/ranking"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <StudentRanking />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/student/latihan/result"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ExamResult />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/student/latihan/result/:attemptId"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <ExamResult />
+                  </MainLayout>
                 </ProtectedRoute>
               }
             />

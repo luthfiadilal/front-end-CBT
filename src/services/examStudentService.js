@@ -45,6 +45,17 @@ const examStudentService = {
         return response.data;
     },
 
+    // Check exam status (completed, in_progress, not_started)
+    getExamStatus: async (examId) => {
+        const user = authService.getCurrentUser();
+        const user_uid = user?.id;
+
+        const response = await api.get(`/student/exam/${examId}/status`, {
+            params: { user_uid }
+        });
+        return response.data;
+    },
+
     // Finish exam and calculate SAW
     finishExam: async (attemptId, userUid, examId) => {
         const response = await api.post('/student/exam/finish', {
