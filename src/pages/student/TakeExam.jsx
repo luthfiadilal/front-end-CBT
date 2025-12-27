@@ -21,22 +21,48 @@ const TakeExam = () => {
     const timerRef = useRef(null);
     const hasInitialized = useRef(false); // Prevent double initialization
 
-    // Check for existing session on mount
+    // Check for existing session on mount with database validation
     useEffect(() => {
         const sessionKey = `exam_session_${examId}`;
         const existingSession = localStorage.getItem(sessionKey);
 
-        if (existingSession) {
-            const session = JSON.parse(existingSession);
-            console.log('Resuming existing exam session:', session);
-            // Resume existing session
-            setAttemptId(session.attemptId);
-            setExamStartTime(new Date(session.startTime));
-            loadExamData(session.attemptId);
-        } else if (!hasInitialized.current) {
-            hasInitialized.current = true;
-            initializeExam();
-        }
+        const validateAndLoad = async () => {
+            if (existingSession) {
+                try {
+                    const session = JSON.parse(existingSession);
+                    console.log('Found existing session:', session);
+
+                    // VALIDATE with database
+                    const statusResponse = await examStudentService.getExamStatus(examId);
+
+                    if (statusResponse.attempt && statusResponse.attempt.id === session.attemptId) {
+                        console.log('✅ Valid session - Resuming');
+                        setAttemptId(session.attemptId);
+                        setExamStartTime(new Date(session.startTime));
+                        loadExamData(session.attemptId);
+                    } else {
+                        console.log('❌ Invalid session - Auto-clearing localStorage');
+                        localStorage.removeItem(sessionKey);
+                        if (!hasInitialized.current) {
+                            hasInitialized.current = true;
+                            initializeExam();
+                        }
+                    }
+                } catch (error) {
+                    console.error('Session validation error:', error);
+                    localStorage.removeItem(sessionKey);
+                    if (!hasInitialized.current) {
+                        hasInitialized.current = true;
+                        initializeExam();
+                    }
+                }
+            } else if (!hasInitialized.current) {
+                hasInitialized.current = true;
+                initializeExam();
+            }
+        };
+
+        validateAndLoad();
 
         // Cleanup on unmount
         return () => {
