@@ -72,7 +72,7 @@ export default function Login() {
             <div className="max-w-md w-full">
                 {/* Logo Section */}
                 <div className="text-center mb-8">
-                    <img src="/images/logo.png" alt="Logo" className="w-20 h-20 mb-4 object-contain" />
+                    <img src="/images/logo.png" alt="Logo" className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mb-4 mx-auto object-contain" />
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Selamat Datang</h1>
                     <p className="text-gray-600">Masuk ke akun CBT Anda</p>
                 </div>

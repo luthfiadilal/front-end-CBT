@@ -100,8 +100,8 @@ const TeacherRanking = () => {
                                         key={exam.id}
                                         onClick={() => handleSelectExam(exam)}
                                         className={`w-full text-left p-4 rounded-xl transition-all duration-200 ${selectedExam?.id === exam.id
-                                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
-                                                : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
+                                            ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg'
+                                            : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
                                             }`}
                                     >
                                         <div className="font-semibold text-sm line-clamp-2 mb-1">
@@ -134,7 +134,7 @@ const TeacherRanking = () => {
                         ) : (
                             <>
                                 {/* Table Header */}
-                                <div className="bg-gradient-to-r from-green-500 to-green-600 p-6">
+                                <div className="bg-gradient-to-r from-orange-400 to-orange-500 p-6" style={{ background: 'linear-gradient(to right, #f7941e, #e67e22)' }}>
                                     <h2 className="text-xl font-bold text-white mb-1">{selectedExam.title}</h2>
                                     <p className="text-white/80 text-sm">
                                         {rankings.length} peserta
@@ -219,7 +219,10 @@ const TeacherRanking = () => {
                                                             <td className="px-6 py-4 text-center">
                                                                 <button
                                                                     onClick={() => handleViewResult(rank.attempt_id)}
-                                                                    className="inline-flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                                                    className="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200 hover:opacity-90"
+                                                                    style={{ backgroundColor: '#f7941e' }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e67e22'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f7941e'}
                                                                 >
                                                                     <Icon icon="solar:eye-bold" className="w-4 h-4" />
                                                                     <span>Detail</span>

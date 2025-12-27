@@ -21,19 +21,16 @@ export default function Register() {
         tanggal_lahir: '',
         kelas: '',
         alamat: '',
-        nip: '',
-        image: null
+        nip: ''
     });
 
-    const [imagePreview, setImagePreview] = useState(null);
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [serverError, setServerError] = useState('');
 
     const roles = [
         { value: 'siswa', label: 'Siswa', icon: '🎓', color: 'green' },
-        { value: 'teacher', label: 'Guru', icon: '👨‍🏫', color: 'blue' },
-        { value: 'admin', label: 'Admin', icon: '⚙️', color: 'purple' }
+        { value: 'teacher', label: 'Guru', icon: '👨‍🏫', color: 'blue' }
     ];
 
     const handleRoleSelect = (role) => {
@@ -57,31 +54,7 @@ export default function Register() {
         setServerError('');
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                setErrors(prev => ({ ...prev, image: 'File harus berupa gambar' }));
-                return;
-            }
 
-            // Validate file size (max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                setErrors(prev => ({ ...prev, image: 'Ukuran file maksimal 2MB' }));
-                return;
-            }
-
-            // Convert to base64
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData(prev => ({ ...prev, image: reader.result }));
-                setImagePreview(reader.result);
-                setErrors(prev => ({ ...prev, image: '' }));
-            };
-            reader.readAsDataURL(file);
-        }
-    };
 
     const validateForm = () => {
         const newErrors = {};
@@ -133,8 +106,7 @@ export default function Register() {
                 role: formData.role,
                 nama: formData.nama,
                 email: formData.email,
-                password: formData.password,
-                image: formData.image
+                password: formData.password
             };
 
             if (selectedRole === 'siswa') {
@@ -161,7 +133,7 @@ export default function Register() {
             <div className="max-w-4xl w-full">
                 {/* Logo Section */}
                 <div className="text-center mb-8">
-                    <img src="/images/logo.png" alt="Logo" className="w-20 h-20 mb-4 object-contain" />
+                    <img src="/images/logo.png" alt="Logo" className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 mb-4 mx-auto object-contain" />
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Daftar Akun Baru</h1>
                     <p className="text-gray-600">Buat akun CBT Anda</p>
                 </div>
@@ -227,41 +199,7 @@ export default function Register() {
                                 </div>
                             )}
 
-                            {/* Image Upload */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    Foto Profil
-                                </label>
-                                <div className="flex items-center gap-4">
-                                    <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                                        {imagePreview ? (
-                                            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <div className="flex-1">
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                            className="hidden"
-                                            id="image-upload"
-                                            disabled={isLoading}
-                                        />
-                                        <label
-                                            htmlFor="image-upload"
-                                            className="inline-block px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors"
-                                        >
-                                            Pilih Foto
-                                        </label>
-                                        <p className="text-xs text-gray-500 mt-1">PNG atau JPG (maks. 2MB)</p>
-                                        {errors.image && <p className="text-sm text-red-600 mt-1">{errors.image}</p>}
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Common Fields */}

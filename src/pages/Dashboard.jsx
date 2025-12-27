@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import authService from '../services/authService';
 
 export default function Dashboard() {
-    const { user } = useAuth();
+    const navigate = useNavigate();
+    const user = authService.getCurrentUser();
     const [profile, setProfile] = useState(null);
 
     useEffect(() => {
@@ -17,10 +19,11 @@ export default function Dashboard() {
     return (
         <div className="p-4 sm:p-6 lg:p-8">
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 text-white">
+            <div className="bg-gradient-to-r from-orange-400 to-orange-500 rounded-2xl shadow-lg p-6 sm:p-8 mb-6 sm:mb-8 text-white">
                 <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                        <Icon icon="solar:user-circle-bold" className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                    {/* Avatar with Initials */}
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white bg-opacity-30 flex items-center justify-center text-white font-bold text-xl sm:text-2xl backdrop-blur-sm">
+                        {profile?.nama?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
                     <div>
                         <h2 className="text-xl sm:text-2xl font-bold mb-1">
@@ -89,7 +92,10 @@ export default function Dashboard() {
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div
+                    className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                    onClick={() => navigate('/student/latihan')}
+                >
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                             <Icon icon="solar:document-text-bold" className="w-6 h-6 text-green-600" />
@@ -103,7 +109,10 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div
+                    className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                    onClick={() => navigate('/student/ranking')}
+                >
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                             <Icon icon="solar:chart-bold" className="w-6 h-6 text-orange-600" />
@@ -117,7 +126,10 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                <div
+                    className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                    onClick={() => navigate('/profile')}
+                >
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
                             <Icon icon="solar:settings-bold" className="w-6 h-6 text-blue-600" />

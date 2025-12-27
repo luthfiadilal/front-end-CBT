@@ -31,10 +31,6 @@ const Profile = () => {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-    // Preview image state
-    const [imagePreview, setImagePreview] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
-
     const [formData, setFormData] = useState({
         nama: '',
         email: '',
@@ -58,7 +54,6 @@ const Profile = () => {
                 alamat: profile.alamat || '',
                 nip: profile.nip || ''
             });
-            setImagePreview(profile.image_url);
         }
     }, [profile]);
 
@@ -70,21 +65,7 @@ const Profile = () => {
         }));
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                setError('Ukuran file maksimal 5MB');
-                return;
-            }
-            setSelectedFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -95,11 +76,6 @@ const Profile = () => {
         try {
             const data = new FormData();
             data.append('nama', formData.nama);
-
-            // Add image if selected
-            if (selectedFile) {
-                data.append('image', selectedFile);
-            }
 
             // Add role specific fields
             if (user?.role === 'siswa') {
@@ -134,26 +110,14 @@ const Profile = () => {
                 className="bg-white rounded-2xl shadow-xl overflow-hidden"
             >
                 {/* Header / Cover */}
-                <div className="h-32 bg-gradient-to-r from-emerald-500 to-teal-600 relative"></div>
+                <div className="h-32 bg-gradient-to-r from-orange-400 to-orange-500 relative"></div>
 
                 <div className="px-8 pb-8">
                     <div className="relative flex justify-between items-end -mt-12 mb-6">
                         <div className="flex items-end">
-                            <div className="relative ring-4 ring-white rounded-full bg-gray-200 w-32 h-32 flex items-center justify-center overflow-hidden shadow-lg">
-                                {imagePreview ? (
-                                    <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
-                                ) : (
-                                    <span className="text-4xl font-bold text-gray-400">
-                                        {formData.nama?.charAt(0)?.toUpperCase()}
-                                    </span>
-                                )}
-
-                                {isEditing && (
-                                    <label className="absolute inset-0 bg-black/50 flex items-center justify-center cursor-pointer hover:bg-black/60 transition-colors group">
-                                        <Icon icon="solar:camera-bold" className="text-white w-8 h-8 opacity-75 group-hover:opacity-100" />
-                                        <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
-                                    </label>
-                                )}
+                            {/* Avatar with Initials - matching Sidebar style */}
+                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-600 to-green-700 flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-lg">
+                                {formData.nama?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                             </div>
                             <div className="ml-6 mb-2">
                                 <h1 className="text-3xl font-bold text-gray-900">{profile?.nama}</h1>
@@ -164,7 +128,7 @@ const Profile = () => {
                         {!isEditing && (
                             <button
                                 onClick={() => setIsEditing(true)}
-                                className="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
+                                className="flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
                             >
                                 <Icon icon="solar:pen-bold" className="mr-2 w-5 h-5" /> Edit Profile
                             </button>
@@ -292,7 +256,6 @@ const Profile = () => {
                                         setIsEditing(false);
                                         setError('');
                                         // Reset form to profile state
-                                        setImagePreview(profile.image_url);
                                         setFormData({
                                             nama: profile.nama || '',
                                             email: profile.email || '',

@@ -58,7 +58,7 @@ const StudentExamList = () => {
     };
 
     return (
-        <div className="min-h-screen bg-brand-green p-6">
+        <div className="min-h-screen p-6">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="mb-8">
@@ -93,14 +93,14 @@ const StudentExamList = () => {
                                     className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-green-200 transition-all duration-300 overflow-hidden group"
                                 >
                                     {/* Card Header */}
-                                    <div className="bg-gradient-to-r from-green-500 to-green-600 p-6">
+                                    <div className="bg-gradient-to-r from-orange-400 to-orange-500 p-6">
                                         <div className="flex items-start justify-between mb-3">
                                             <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
                                                 <Icon icon="solar:clipboard-list-bold" className="w-6 h-6 text-white" />
                                             </div>
                                             <span className={`backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full ${isCompleted ? 'bg-blue-500/80' :
-                                                    isInProgress ? 'bg-orange-500/80' :
-                                                        'bg-white/20'
+                                                isInProgress ? 'bg-orange-500/80' :
+                                                    'bg-white/20'
                                                 }`}>
                                                 {isCompleted ? 'Selesai' : isInProgress ? 'Berlangsung' : 'Aktif'}
                                             </span>
@@ -139,10 +139,10 @@ const StudentExamList = () => {
                                             onClick={() => handleStartExam(exam.id)}
                                             disabled={isCompleted}
                                             className={`w-full font-semibold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg ${isCompleted
-                                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                                    : isInProgress
-                                                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 shadow-orange-200 group-hover:shadow-xl group-hover:shadow-orange-300'
-                                                        : 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-green-200 group-hover:shadow-xl group-hover:shadow-green-300'
+                                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                : isInProgress
+                                                    ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 shadow-orange-200 group-hover:shadow-xl group-hover:shadow-orange-300'
+                                                    : 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-green-200 group-hover:shadow-xl group-hover:shadow-green-300'
                                                 }`}
                                         >
                                             <Icon icon={isCompleted ? "solar:check-circle-bold" : isInProgress ? "solar:restart-bold" : "solar:play-circle-bold"} className="w-5 h-5" />

@@ -79,7 +79,7 @@ const ExamResult = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-100 via-green-50 to-emerald-100 p-6">
+        <div className="min-h-screen  p-6">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-6">
@@ -272,7 +272,7 @@ const ExamResult = () => {
                 <div className="flex justify-center">
                     <button
                         onClick={() => navigate('/student/latihan')}
-                        className="bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-4 px-8 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 flex items-center gap-2 shadow-lg"
+                        className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold py-4 px-8 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 flex items-center gap-2 shadow-lg"
                     >
                         <Icon icon="solar:arrow-left-bold" className="w-5 h-5" />
                         <span>Kembali ke Daftar Latihan</span>

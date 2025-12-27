@@ -98,8 +98,8 @@ const StudentRanking = () => {
         <div className="p-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Ranking Ujian</h1>
-                <p className="text-gray-600">Lihat peringkat hasil ujian siswa</p>
+                <h1 className="text-3xl font-bold text-white mb-2">Ranking Ujian</h1>
+                <p className="text-white">Lihat peringkat hasil ujian siswa</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -154,7 +154,7 @@ const StudentRanking = () => {
                         ) : (
                             <>
                                 {/* Table Header */}
-                                <div className="bg-gradient-to-r from-green-500 to-green-600 p-6">
+                                <div className="bg-gradient-to-r from-orange-400 to-orange-500 p-6" style={{ background: 'linear-gradient(to right, #f7941e, #e67e22)' }}>
                                     <h2 className="text-xl font-bold text-white mb-1">{selectedExam.title}</h2>
                                     <p className="text-white/80 text-sm">
                                         {rankings.length} peserta
@@ -251,10 +251,13 @@ const StudentRanking = () => {
                                                             <td className="px-6 py-4 text-center">
                                                                 <button
                                                                     onClick={() => handleViewResult(rank.attempt_id, rank.user_uid)}
-                                                                    className={`inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200 ${isCurrentUser
-                                                                        ? 'bg-green-600 hover:bg-green-700'
-                                                                        : 'bg-green-500 hover:bg-green-600'
-                                                                        }`}
+                                                                    className="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                                                                    style={{
+                                                                        backgroundColor: isCurrentUser ? '#e67e22' : '#f7941e',
+                                                                        ':hover': { backgroundColor: isCurrentUser ? '#d35400' : '#e67e22' }
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isCurrentUser ? '#d35400' : '#e67e22'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isCurrentUser ? '#e67e22' : '#f7941e'}
                                                                 >
                                                                     <Icon icon="solar:eye-bold" className="w-4 h-4" />
                                                                     <span>Detail</span>

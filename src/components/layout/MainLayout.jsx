@@ -6,7 +6,7 @@ const MainLayout = ({ children }) => {
     const { isOpen, setIsOpen } = useSidebar();
 
     return (
-        <div className="min-h-screen bg-brand-green">
+        <div className="min-h-screen bg-gradient-to-r from-green-500 to-green-600">
             {/* Mobile Header with Hamburger */}
             <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-brand-green border-b border-gray-200 z-10 flex items-center px-4">
                 <button
