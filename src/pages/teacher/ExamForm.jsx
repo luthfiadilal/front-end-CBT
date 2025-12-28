@@ -70,7 +70,7 @@ const ExamForm = () => {
                 await examService.createExam(payload);
                 alert('Exam created successfully!');
             }
-            navigate('/admin/exams');
+            navigate('/teacher/exams');
         } catch (error) {
             console.error('Error saving exam:', error);
             alert(error.response?.data?.error || 'Failed to save exam.');
@@ -175,7 +175,7 @@ const ExamForm = () => {
                     <div className="pt-6 border-t border-gray-100 flex justify-end gap-3">
                         <button
                             type="button"
-                            onClick={() => navigate('/admin/exams')}
+                            onClick={() => navigate('/teacher/exams')}
                             className="px-6 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-xl transition-colors"
                         >
                             Cancel

@@ -67,8 +67,8 @@ const TeacherRanking = () => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="flex flex-col items-center gap-3">
-                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-green-600" />
-                    <span className="text-gray-600">Memuat data...</span>
+                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-orange-300" />
+                    <span className="text-white">Memuat data...</span>
                 </div>
             </div>
         );
@@ -78,8 +78,8 @@ const TeacherRanking = () => {
         <div className="p-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Ranking Ujian Siswa</h1>
-                <p className="text-gray-600">Lihat peringkat hasil ujian siswa</p>
+                <h1 className="text-3xl font-bold text-white mb-2">Ranking Ujian Siswa</h1>
+                <p className="text-white">Lihat peringkat hasil ujian siswa</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

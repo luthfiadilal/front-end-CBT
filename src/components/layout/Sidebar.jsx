@@ -22,13 +22,7 @@ const Sidebar = () => {
         teacher: [
 
             { path: '/teacher/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
-            {
-                label: 'Kelola Kriteria',
-                icon: 'solar:list-check-bold',
-                children: [
-                    { path: '/teacher/kriteria', label: 'All Kriteria' },
-                ]
-            },
+            { path: '/teacher/kriteria', label: 'Kelola Kriteria', icon: 'solar:list-check-bold' },
             { path: '/teacher/questions', label: 'Kelola Soal', icon: 'solar:question-circle-bold' },
             { path: '/teacher/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
             { path: '/teacher/exams', label: 'Kelola Latihan', icon: 'solar:clipboard-list-bold' },

@@ -298,12 +298,12 @@ const Kriteria = () => {
         <div className="p-8">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Kriteria Management</h1>
-                    <p className="text-gray-500 mt-1">Manage master kriteria and sub-criteria settings</p>
+                    <h1 className="text-2xl font-bold text-white">Kriteria Management</h1>
+                    <p className="text-white mt-1">Manage master kriteria and sub-criteria settings</p>
                 </div>
                 <button
                     onClick={() => openModal('add')}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors shadow-sm font-medium"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl hover:bg-green-700 transition-colors shadow-sm font-medium"
                 >
                     <Icon icon="solar:add-circle-bold" className="w-5 h-5" />
                     <span>Add New</span>
@@ -317,8 +317,8 @@ const Kriteria = () => {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={`px-5 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${activeTab === tab.id
-                                ? 'bg-green-600 text-white shadow-md'
-                                : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-100'
+                            ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white shadow-md'
+                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-100'
                             }`}
                     >
                         {tab.label}

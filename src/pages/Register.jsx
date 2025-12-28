@@ -30,7 +30,8 @@ export default function Register() {
 
     const roles = [
         { value: 'siswa', label: 'Siswa', icon: '🎓', color: 'green' },
-        { value: 'teacher', label: 'Guru', icon: '👨‍🏫', color: 'blue' }
+        { value: 'teacher', label: 'Guru', icon: '👨‍🏫', color: 'blue' },
+        { value: 'admin', label: 'Admin', icon: '⚙️', color: 'purple' }
     ];
 
     const handleRoleSelect = (role) => {

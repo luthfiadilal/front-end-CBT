@@ -76,12 +76,12 @@ const QuestionList = () => {
         <div className="p-6">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">All Questions</h1>
-                    <p className="text-gray-500 mt-1">Manage and view all questions</p>
+                    <h1 className="text-2xl font-bold text-white">All Questions</h1>
+                    <p className="text-white mt-1">Manage and view all questions</p>
                 </div>
                 <button
                     onClick={() => navigate('/teacher/questions/create')}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors shadow-sm font-medium"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl hover:bg-green-700 transition-colors shadow-sm font-medium"
                 >
                     <Icon icon="solar:add-circle-bold" className="w-5 h-5" />
                     <span>Create Question</span>

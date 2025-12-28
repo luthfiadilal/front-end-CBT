@@ -39,6 +39,16 @@ const userService = {
         } catch (error) {
             throw error.response?.data || error.message;
         }
+    },
+
+    // Get students with exam status (Teacher)
+    async getStudentsExamStatus(examId) {
+        try {
+            const response = await api.get(`/users/students/exam-status?exam_id=${examId}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || error.message;
+        }
     }
 };
 

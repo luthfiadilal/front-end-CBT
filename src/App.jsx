@@ -15,6 +15,7 @@ import QuestionList from './pages/teacher/QuestionList';
 import ExamList from './pages/teacher/ExamList';
 import ExamForm from './pages/teacher/ExamForm';
 import TeacherRanking from './pages/teacher/TeacherRanking';
+import StudentExamAttempts from './pages/teacher/StudentExamAttempts';
 
 // Student Pages
 import StudentExamList from './pages/student/StudentExamList';
@@ -151,7 +152,7 @@ function App() {
               }
             />
             <Route
-              path="/teacher/exam/create"
+              path="/teacher/exams/create"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -162,7 +163,7 @@ function App() {
             />
 
             <Route
-              path="/teacher/exam/edit/:examId"
+              path="/teacher/exams/edit/:id"
               element={
                 <ProtectedRoute>
                   <MainLayout>
@@ -178,6 +179,17 @@ function App() {
                 <ProtectedRoute>
                   <MainLayout>
                     <TeacherRanking />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/teacher/exam-attempts"
+              element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <StudentExamAttempts />
                   </MainLayout>
                 </ProtectedRoute>
               }

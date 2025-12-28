@@ -38,12 +38,12 @@ const ExamList = () => {
         <div className="p-6">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Manage Exams</h1>
-                    <p className="text-gray-500 mt-1">Create, update, and remove exams</p>
+                    <h1 className="text-2xl font-bold text-white">Manage Exams</h1>
+                    <p className="text-white mt-1">Create, update, and remove exams</p>
                 </div>
                 <button
                     onClick={() => navigate('/teacher/exams/create')}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200 font-medium"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl hover:bg-green-700 transition-colors shadow-md shadow-orange-400 font-medium"
                 >
                     <Icon icon="solar:add-circle-bold" className="w-5 h-5" />
                     <span>Create New Exam</span>

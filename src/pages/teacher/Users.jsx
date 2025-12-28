@@ -77,10 +77,10 @@ const Users = () => {
 
     if (loading && users.length === 0) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
+            <div className="flex items-center justify-center min-h-screen">
                 <div className="flex flex-col items-center gap-3">
-                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-green-600"></div>
-                    <p className="text-gray-500 text-sm animate-pulse">Memuat data user...</p>
+                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-orange-300" />
+                    <span className="text-white">Memuat data...</span>
                 </div>
             </div>
         );
@@ -96,7 +96,7 @@ const Users = () => {
     }
 
     return (
-        <div className="space-y-8 p-6 bg-brand-green min-h-screen text-white">
+        <div className="space-y-8 p-6  min-h-screen text-white">
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
