@@ -37,7 +37,7 @@ const ExamForm = () => {
             });
         } catch (error) {
             console.error('Failed to fetch exam details', error);
-            alert('Failed to load exam details.');
+            alert('Gagal memuat detail latihan.');
             navigate('/teacher/exams');
         } finally {
             setFetching(false);
@@ -65,15 +65,15 @@ const ExamForm = () => {
 
             if (isEditMode) {
                 await examService.updateExam(id, payload);
-                alert('Exam updated successfully!');
+                alert('Latihan berhasil diperbarui!');
             } else {
                 await examService.createExam(payload);
-                alert('Exam created successfully!');
+                alert('Latihan berhasil dibuat!');
             }
             navigate('/teacher/exams');
         } catch (error) {
             console.error('Error saving exam:', error);
-            alert(error.response?.data?.error || 'Failed to save exam.');
+            alert(error.response?.data?.error || 'Gagal menyimpan latihan.');
         } finally {
             setLoading(false);
         }
@@ -91,15 +91,15 @@ const ExamForm = () => {
         <div className="p-6 max-w-3xl mx-auto">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{isEditMode ? 'Edit Exam' : 'Create New Exam'}</h1>
-                    <p className="text-gray-500 mt-1">{isEditMode ? 'Update exam details' : 'Set up a new examination'}</p>
+                    <h1 className="text-2xl font-bold text-white">{isEditMode ? 'Edit Latihan' : 'Buat Latihan Baru'}</h1>
+                    <p className="text-white mt-1">{isEditMode ? 'Perbarui detail latihan' : 'Atur latihan baru'}</p>
                 </div>
                 <button
                     onClick={() => navigate('/teacher/exams')}
                     className="flex items-center gap-2 px-5 py-2.5 bg-white text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm font-medium"
                 >
                     <Icon icon="solar:arrow-left-bold" className="w-5 h-5" />
-                    <span>Back</span>
+                    <span>Kembali</span>
                 </button>
             </div>
 
@@ -107,7 +107,7 @@ const ExamForm = () => {
                 <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Exam Title</label>
+                        <label className="block text-sm font-medium text-gray-700">Judul Latihan</label>
                         <input
                             type="text"
                             name="title"
@@ -115,24 +115,24 @@ const ExamForm = () => {
                             onChange={handleChange}
                             required
                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                            placeholder="e.g. Final Semester Mathematics"
+                            placeholder="misalnya Ujian Akhir Semester Matematika"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Description</label>
+                        <label className="block text-sm font-medium text-gray-700">Deskripsi</label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition min-h-[100px] resize-y"
-                            placeholder="Optional description..."
+                            placeholder="Deskripsi opsional..."
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Total Questions</label>
+                            <label className="block text-sm font-medium text-gray-700">Total Soal</label>
                             <input
                                 type="number"
                                 name="total_questions"
@@ -145,7 +145,7 @@ const ExamForm = () => {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Duration (Minutes)</label>
+                            <label className="block text-sm font-medium text-gray-700">Durasi (Menit)</label>
                             <input
                                 type="number"
                                 name="total_time_minutes"
@@ -168,7 +168,7 @@ const ExamForm = () => {
                             className="w-5 h-5 text-green-600 rounded border-gray-300 focus:ring-green-500"
                         />
                         <label htmlFor="is_active" className="text-sm font-medium text-gray-700 cursor-pointer select-none">
-                            Active (Visible to students immediately)
+                            Aktif (Langsung terlihat oleh siswa)
                         </label>
                     </div>
 
@@ -178,7 +178,7 @@ const ExamForm = () => {
                             onClick={() => navigate('/teacher/exams')}
                             className="px-6 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-xl transition-colors"
                         >
-                            Cancel
+                            Batal
                         </button>
                         <button
                             type="submit"
@@ -188,10 +188,10 @@ const ExamForm = () => {
                             {loading ? (
                                 <>
                                     <Icon icon="svg-spinners:ring-resize" className="w-5 h-5" />
-                                    <span>Saving...</span>
+                                    <span>Menyimpan...</span>
                                 </>
                             ) : (
-                                <span>{isEditMode ? 'Update Exam' : 'Create Exam'}</span>
+                                <span>{isEditMode ? 'Perbarui Latihan' : 'Buat Latihan'}</span>
                             )}
                         </button>
                     </div>

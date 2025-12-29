@@ -21,19 +21,19 @@ const Sidebar = () => {
     const roleMenus = {
         teacher: [
 
-            { path: '/teacher/users', label: 'Kelola User', icon: 'solar:users-group-rounded-bold' },
+            { path: '/teacher/users', label: 'Kelola Siswa', icon: 'solar:users-group-rounded-bold' },
             { path: '/teacher/kriteria', label: 'Kelola Kriteria', icon: 'solar:list-check-bold' },
             { path: '/teacher/questions', label: 'Kelola Soal', icon: 'solar:question-circle-bold' },
-            { path: '/teacher/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
+            { path: '/teacher/ranking', label: 'Leaderboard', icon: 'solar:ranking-bold' },
             { path: '/teacher/exams', label: 'Kelola Latihan', icon: 'solar:clipboard-list-bold' },
             { path: '/teacher/exam-attempts', label: 'Latihan Siswa', icon: 'solar:history-bold' },
-            { path: '/profile', label: 'Akun', icon: 'solar:user-bold' },
+            { path: '/profile', label: 'Profil', icon: 'solar:user-bold' },
         ],
         siswa: [
             { path: '/dashboard', label: 'Dashboard', icon: 'solar:widget-bold' },
             { path: '/student/latihan', label: 'Latihan', icon: 'solar:dumbbell-bold' },
-            { path: '/student/ranking', label: 'Rangking', icon: 'solar:ranking-bold' },
-            { path: '/profile', label: 'Profile', icon: 'solar:user-bold' },
+            { path: '/student/ranking', label: 'Leaderboard', icon: 'solar:ranking-bold' },
+            { path: '/profile', label: 'Profil', icon: 'solar:user-bold' },
         ]
     };
 

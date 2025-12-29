@@ -7,11 +7,9 @@ const initialFormState = {
     nama: '',
     email: '',
     password: '',
-    nis: '',
     kelas: '',
     tanggal_lahir: '',
-    alamat: '',
-    nip: ''
+    alamat: ''
 };
 
 const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
@@ -29,11 +27,9 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
                     nama: userToEdit.nama || '',
                     email: userToEdit.email || '',
                     password: '', // Password usually blank on edit
-                    nis: userToEdit.nis || '',
                     kelas: userToEdit.kelas || '',
                     tanggal_lahir: userToEdit.tanggal_lahir || '',
-                    alamat: userToEdit.alamat || '',
-                    nip: userToEdit.nip || ''
+                    alamat: userToEdit.alamat || ''
                 });
             } else {
                 setRole('siswa');
@@ -186,31 +182,17 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
                                     <Icon icon="solar:user-id-bold" />
                                     <span className="text-sm font-semibold">Data Siswa</span>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">NIS</label>
-                                        <input
-                                            type="text"
-                                            name="nis"
-                                            value={formData.nis}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                                            placeholder="Nomor Induk Siswa"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-                                        <input
-                                            type="text"
-                                            name="kelas"
-                                            value={formData.kelas}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                                            placeholder="Contoh: X IPA 1"
-                                        />
-                                    </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                                    <input
+                                        type="text"
+                                        name="kelas"
+                                        value={formData.kelas}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                                        placeholder="Contoh: X IPA 1"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
@@ -233,27 +215,6 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
                                         rows="3"
                                         className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all resize-none"
                                         placeholder="Alamat lengkap siswa"
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {role === 'teacher' && (
-                            <div className="space-y-4 pt-2 border-t border-gray-100">
-                                <div className="flex items-center gap-2 text-blue-600 mb-2">
-                                    <Icon icon="solar:user-id-bold" />
-                                    <span className="text-sm font-semibold">Data Guru</span>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">NIP</label>
-                                    <input
-                                        type="text"
-                                        name="nip"
-                                        value={formData.nip}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full px-4 py-2.5 rounded-xl border border-gray-300 text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
-                                        placeholder="Nomor Induk Pegawai"
                                     />
                                 </div>
                             </div>

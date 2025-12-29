@@ -35,12 +35,9 @@ const Profile = () => {
         nama: '',
         email: '',
         // Siswa fields
-        nis: '',
         kelas: '',
         tanggal_lahir: '',
-        alamat: '',
-        // Teacher fields
-        nip: ''
+        alamat: ''
     });
 
     useEffect(() => {
@@ -48,11 +45,9 @@ const Profile = () => {
             setFormData({
                 nama: profile.nama || '',
                 email: profile.email || '',
-                nis: profile.nis || '',
                 kelas: profile.kelas || '',
                 tanggal_lahir: profile.tanggal_lahir || '',
-                alamat: profile.alamat || '',
-                nip: profile.nip || ''
+                alamat: profile.alamat || ''
             });
         }
     }, [profile]);
@@ -79,12 +74,9 @@ const Profile = () => {
 
             // Add role specific fields
             if (user?.role === 'siswa') {
-                data.append('nis', formData.nis);
                 data.append('kelas', formData.kelas);
                 data.append('tanggal_lahir', formData.tanggal_lahir);
                 data.append('alamat', formData.alamat);
-            } else if (user?.role === 'teacher') {
-                data.append('nip', formData.nip);
             }
 
             await authService.updateProfile(data);
@@ -180,15 +172,6 @@ const Profile = () => {
                                 {user?.role === 'siswa' && (
                                     <>
                                         <InputField
-                                            label="NIS"
-                                            name="nis"
-                                            value={formData.nis}
-                                            onChange={handleChange}
-                                            icon="solar:hashtag-bold"
-                                            disabled={!isEditing}
-                                            required
-                                        />
-                                        <InputField
                                             label="Kelas"
                                             name="kelas"
                                             value={formData.kelas}
@@ -228,15 +211,9 @@ const Profile = () => {
                                 )}
 
                                 {user?.role === 'teacher' && (
-                                    <InputField
-                                        label="NIP"
-                                        name="nip"
-                                        value={formData.nip}
-                                        onChange={handleChange}
-                                        icon="solar:hashtag-bold"
-                                        disabled={!isEditing}
-                                        required
-                                    />
+                                    <div className="text-gray-500 italic">
+                                        Tidak ada data tambahan untuk Teacher.
+                                    </div>
                                 )}
 
                                 {user?.role === 'admin' && (
@@ -259,11 +236,9 @@ const Profile = () => {
                                         setFormData({
                                             nama: profile.nama || '',
                                             email: profile.email || '',
-                                            nis: profile.nis || '',
                                             kelas: profile.kelas || '',
                                             tanggal_lahir: profile.tanggal_lahir || '',
-                                            alamat: profile.alamat || '',
-                                            nip: profile.nip || ''
+                                            alamat: profile.alamat || ''
                                         });
                                     }}
                                     className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-colors"

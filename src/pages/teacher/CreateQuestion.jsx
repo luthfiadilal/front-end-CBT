@@ -130,7 +130,7 @@ const CreateQuestion = () => {
                     }
                 } catch (err) {
                     console.error('Failed to fetch question details', err);
-                    alert('Failed to load question details.');
+                    alert('Gagal memuat detail soal.');
                     navigate('/teacher/questions');
                 } finally {
                     setLoading(false);
@@ -180,7 +180,7 @@ const CreateQuestion = () => {
         try {
             const hasCorrectUrl = options.some(opt => opt.is_correct);
             if (!hasCorrectUrl) {
-                alert('Please select at least one correct answer');
+                alert('Silakan pilih minimal satu jawaban yang benar');
                 setLoading(false);
                 return;
             }
@@ -216,10 +216,10 @@ const CreateQuestion = () => {
 
             if (isEditMode) {
                 await updateQuestion(id, formData);
-                alert('Question updated successfully!');
+                alert('Soal berhasil diperbarui!');
             } else {
                 await createQuestion(formData);
-                alert('Question created successfully!');
+                alert('Soal berhasil dibuat!');
             }
             navigate('/teacher/questions');
         } catch (error) {
@@ -235,15 +235,15 @@ const CreateQuestion = () => {
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{isEditMode ? 'Edit Question' : 'Create Question'}</h1>
-                    <p className="text-gray-500 mt-1">{isEditMode ? 'Update question details' : 'Add a new question to an exam'}</p>
+                    <h1 className="text-2xl font-bold text-white">{isEditMode ? 'Edit Soal' : 'Buat Soal'}</h1>
+                    <p className="text-white mt-1">{isEditMode ? 'Perbarui detail soal' : 'Tambahkan soal baru ke latihan'}</p>
                 </div>
                 <button
                     onClick={() => navigate(-1)}
                     className="flex items-center gap-2 px-5 py-2.5 bg-white text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm font-medium"
                 >
                     <Icon icon="solar:arrow-left-bold" className="w-5 h-5" />
-                    <span>Back</span>
+                    <span>Kembali</span>
                 </button>
             </div>
 
@@ -253,7 +253,7 @@ const CreateQuestion = () => {
 
                         {/* Exam Selection */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Select Exam</label>
+                            <label className="block text-sm font-medium text-gray-700">Pilih Latihan</label>
                             <div className="relative">
                                 <select
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition appearance-none"
@@ -261,7 +261,7 @@ const CreateQuestion = () => {
                                     onChange={(e) => setExamId(e.target.value)}
                                     required
                                 >
-                                    <option value="" disabled>Choose an exam...</option>
+                                    <option value="" disabled>Pilih latihan...</option>
                                     {exams.map(exam => (
                                         <option key={exam.id} value={exam.id}>{exam.title}</option>
                                     ))}
@@ -272,14 +272,14 @@ const CreateQuestion = () => {
 
                         {/* Pair Group Selection */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Pair Group (Optional)</label>
-                            <p className="text-xs text-gray-500">Group questions that belong to the same context (e.g. Reading Passage)</p>
+                            <label className="block text-sm font-medium text-gray-700">Grup Pasangan (Opsional)</label>
+                            <p className="text-xs text-gray-500">Kelompokkan soal yang memiliki konteks sama (misalnya Bacaan yang Sama)</p>
                             <div className="relative">
                                 <input
                                     type="text"
                                     list="pair-groups-list"
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
-                                    placeholder="Select existing or type new group name..."
+                                    placeholder="Pilih grup yang ada atau ketik nama grup baru..."
                                     value={pairGroup}
                                     onChange={(e) => setPairGroup(e.target.value)}
                                 />
@@ -293,10 +293,10 @@ const CreateQuestion = () => {
 
                         {/* Question Text */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Question Text</label>
+                            <label className="block text-sm font-medium text-gray-700">Teks Soal</label>
                             <textarea
                                 className="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition min-h-[150px] resize-y"
-                                placeholder="Enter your question here..."
+                                placeholder="Masukkan soal Anda di sini..."
                                 value={questionText}
                                 onChange={(e) => setQuestionText(e.target.value)}
                                 required
@@ -305,7 +305,7 @@ const CreateQuestion = () => {
 
                         {/* Image Upload */}
                         <div className="space-y-2">
-                            <label className="block text-sm font-medium text-gray-700">Question Image (Optional)</label>
+                            <label className="block text-sm font-medium text-gray-700">Gambar Soal (Opsional)</label>
                             <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative overflow-hidden">
                                 <input
                                     type="file"
@@ -332,8 +332,8 @@ const CreateQuestion = () => {
                                         <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
                                             <Icon icon="solar:gallery-add-bold" className="w-6 h-6" />
                                         </div>
-                                        <p className="text-sm font-medium text-gray-900">Click to upload image</p>
-                                        <p className="text-xs text-gray-500 mt-1">SVG, PNG, JPG or GIF (max. 5MB)</p>
+                                        <p className="text-sm font-medium text-gray-900">Klik untuk unggah gambar</p>
+                                        <p className="text-xs text-gray-500 mt-1">SVG, PNG, JPG atau GIF (maks. 5MB)</p>
                                     </div>
                                 )}
                             </div>
@@ -342,7 +342,7 @@ const CreateQuestion = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Difficulty */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">Difficulty Level</label>
+                                <label className="block text-sm font-medium text-gray-700">Tingkat Kesulitan</label>
                                 <div className="relative">
                                     <select
                                         className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition appearance-none"
@@ -361,7 +361,7 @@ const CreateQuestion = () => {
 
                             {/* Points */}
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">Points</label>
+                                <label className="block text-sm font-medium text-gray-700">Poin</label>
                                 <input
                                     type="number"
                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
@@ -376,8 +376,8 @@ const CreateQuestion = () => {
                         <div className="pt-6 border-t border-gray-100">
                             <div className="flex items-center justify-between mb-6">
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Answer Options</h3>
-                                    <p className="text-sm text-gray-500">Select the correct answer by clicking the radio button</p>
+                                    <h3 className="text-lg font-bold text-gray-900">Pilihan Jawaban</h3>
+                                    <p className="text-sm text-gray-500">Pilih jawaban yang benar dengan mengklik tombol radio</p>
                                 </div>
                                 <button
                                     type="button"
@@ -385,7 +385,7 @@ const CreateQuestion = () => {
                                     className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors font-medium text-sm"
                                 >
                                     <Icon icon="solar:add-circle-bold" className="w-5 h-5" />
-                                    Add Option
+                                    Tambah Pilihan
                                 </button>
                             </div>
 
@@ -404,7 +404,7 @@ const CreateQuestion = () => {
                                         <div className="flex-1">
                                             <input
                                                 type="text"
-                                                placeholder={`Option ${index + 1}`}
+                                                placeholder={`Pilihan ${index + 1}`}
                                                 className="w-full bg-transparent border-none focus:ring-0 text-gray-900 placeholder-gray-400 font-medium"
                                                 value={option.option_text}
                                                 onChange={(e) => handleOptionChange(index, 'option_text', e.target.value)}
@@ -431,7 +431,7 @@ const CreateQuestion = () => {
                                 onClick={() => navigate(-1)}
                                 className="px-6 py-2.5 text-gray-600 font-medium hover:bg-gray-100 rounded-xl transition-colors"
                             >
-                                Cancel
+                                Batal
                             </button>
                             <button
                                 type="submit"
@@ -441,10 +441,10 @@ const CreateQuestion = () => {
                                 {loading ? (
                                     <>
                                         <Icon icon="svg-spinners:ring-resize" className="w-5 h-5" />
-                                        <span>{isEditMode ? 'Updating...' : 'Saving...'}</span>
+                                        <span>{isEditMode ? 'Memperbarui...' : 'Menyimpan...'}</span>
                                     </>
                                 ) : (
-                                    <span>{isEditMode ? 'Update Question' : 'Save Question'}</span>
+                                    <span>{isEditMode ? 'Perbarui Soal' : 'Simpan Soal'}</span>
                                 )}
                             </button>
                         </div>

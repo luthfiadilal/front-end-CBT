@@ -165,7 +165,7 @@ export default function Login() {
 
                 {/* Footer */}
                 <p className="text-center text-gray-500 text-sm mt-8">
-                    © 2024 TPQ Husnul Khotimah. All rights reserved.
+                    © 2024 TPQ Husnul Khotimah. Hak cipta dilindungi.
                 </p>
             </div>
         </div>

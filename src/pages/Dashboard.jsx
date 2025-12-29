@@ -51,22 +51,10 @@ export default function Dashboard() {
                         <p className="text-sm text-gray-600 mb-1">Email</p>
                         <p className="font-semibold text-gray-900 text-sm break-all">{profile?.email || user?.email || '-'}</p>
                     </div>
-                    {profile?.nis && (
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <p className="text-sm text-gray-600 mb-1">NIS</p>
-                            <p className="font-semibold text-gray-900">{profile.nis}</p>
-                        </div>
-                    )}
                     {profile?.kelas && (
                         <div className="p-4 bg-gray-50 rounded-lg">
                             <p className="text-sm text-gray-600 mb-1">Kelas</p>
                             <p className="font-semibold text-gray-900">{profile.kelas}</p>
-                        </div>
-                    )}
-                    {profile?.nip && (
-                        <div className="p-4 bg-gray-50 rounded-lg">
-                            <p className="text-sm text-gray-600 mb-1">NIP</p>
-                            <p className="font-semibold text-gray-900">{profile.nip}</p>
                         </div>
                     )}
                     {profile?.tanggal_lahir && (
@@ -94,34 +82,42 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 <div
                     className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                    onClick={() => navigate('/student/latihan')}
+                    onClick={() => navigate(user?.role === 'teacher' ? '/teacher/exams' : '/student/latihan')}
                 >
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                             <Icon icon="solar:document-text-bold" className="w-6 h-6 text-green-600" />
                         </div>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Ujian Tersedia</h4>
-                    <p className="text-sm text-gray-600 mb-4">Lihat daftar ujian yang dapat Anda ikuti</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">
+                        {user?.role === 'teacher' ? 'Kelola Latihan' : 'Ujian Tersedia'}
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                        {user?.role === 'teacher' ? 'Kelola daftar latihan untuk siswa' : 'Lihat daftar ujian yang dapat Anda ikuti'}
+                    </p>
                     <div className="text-sm text-green-600 hover:text-green-700 font-semibold flex items-center">
-                        Lihat Ujian
+                        {user?.role === 'teacher' ? 'Kelola Latihan' : 'Lihat Ujian'}
                         <Icon icon="solar:alt-arrow-right-bold" className="w-4 h-4 ml-1" />
                     </div>
                 </div>
 
                 <div
                     className="bg-white rounded-2xl shadow-md border border-gray-100 p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                    onClick={() => navigate('/student/ranking')}
+                    onClick={() => navigate(user?.role === 'teacher' ? '/teacher/ranking' : '/student/ranking')}
                 >
                     <div className="flex items-center justify-between mb-4">
                         <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
                             <Icon icon="solar:chart-bold" className="w-6 h-6 text-orange-600" />
                         </div>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Riwayat Nilai</h4>
-                    <p className="text-sm text-gray-600 mb-4">Cek hasil ujian yang telah Anda kerjakan</p>
+                    <h4 className="font-semibold text-gray-900 mb-2">
+                        {user?.role === 'teacher' ? 'Leaderboard' : 'Riwayat Nilai'}
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-4">
+                        {user?.role === 'teacher' ? 'Lihat peringkat siswa berdasarkan nilai' : 'Cek hasil ujian yang telah Anda kerjakan'}
+                    </p>
                     <div className="text-sm text-orange-600 hover:text-orange-700 font-semibold flex items-center">
-                        Lihat Nilai
+                        {user?.role === 'teacher' ? 'Lihat Leaderboard' : 'Lihat Nilai'}
                         <Icon icon="solar:alt-arrow-right-bold" className="w-4 h-4 ml-1" />
                     </div>
                 </div>
@@ -135,10 +131,10 @@ export default function Dashboard() {
                             <Icon icon="solar:settings-bold" className="w-6 h-6 text-blue-600" />
                         </div>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Pengaturan</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">Profil</h4>
                     <p className="text-sm text-gray-600 mb-4">Kelola profil dan preferensi akun Anda</p>
                     <div className="text-sm text-blue-600 hover:text-blue-700 font-semibold flex items-center">
-                        Pengaturan
+                        Lihat Profil
                         <Icon icon="solar:alt-arrow-right-bold" className="w-4 h-4 ml-1" />
                     </div>
                 </div>

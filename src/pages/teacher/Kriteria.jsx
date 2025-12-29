@@ -78,13 +78,13 @@ const Kriteria = () => {
             setModal({ isOpen: false, type: 'add', item: null });
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('Failed to save data. Please check inputs.');
+            alert('Gagal menyimpan data. Silakan periksa input Anda.');
         }
     };
 
     // Handle Delete
     const handleDelete = async (item) => {
-        if (!window.confirm('Are you sure you want to delete this item?')) return;
+        if (!window.confirm('Apakah Anda yakin ingin menghapus item ini?')) return;
         try {
             const id = item.id || item.kode_kriteria;
             switch (activeTab) {
@@ -97,7 +97,7 @@ const Kriteria = () => {
             fetchData();
         } catch (error) {
             console.error('Error deleting:', error);
-            alert('Failed to delete item.');
+            alert('Gagal menghapus item.');
         }
     };
 
@@ -260,7 +260,7 @@ const Kriteria = () => {
                             className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
                             required
                         >
-                            <option value="">Select Atribut</option>
+                            <option value="">Pilih Atribut</option>
                             <option value="Benefit">Benefit</option>
                             <option value="Cost">Cost</option>
                         </select>
@@ -279,13 +279,13 @@ const Kriteria = () => {
                     <div className="flex-1">
                         {commonInput(
                             activeTab === 'waktu' ? 'min_menit' : activeTab === 'kesulitan' ? 'min_skor' : activeTab === 'konsistensi' ? 'min_pasangan' : 'min_benar',
-                            'Min Value', 'number'
+                            'Nilai Min', 'number'
                         )}
                     </div>
                     <div className="flex-1">
                         {commonInput(
                             activeTab === 'waktu' ? 'max_menit' : activeTab === 'kesulitan' ? 'max_skor' : activeTab === 'konsistensi' ? 'max_pasangan' : 'max_benar',
-                            'Max Value', 'number'
+                            'Nilai Maks', 'number'
                         )}
                     </div>
                 </div>
@@ -298,15 +298,15 @@ const Kriteria = () => {
         <div className="p-8">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Kriteria Management</h1>
-                    <p className="text-white mt-1">Manage master kriteria and sub-criteria settings</p>
+                    <h1 className="text-2xl font-bold text-white">Manajemen Kriteria</h1>
+                    <p className="text-white mt-1">Kelola master kriteria dan pengaturan sub-kriteria</p>
                 </div>
                 <button
                     onClick={() => openModal('add')}
                     className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-xl hover:bg-green-700 transition-colors shadow-sm font-medium"
                 >
                     <Icon icon="solar:add-circle-bold" className="w-5 h-5" />
-                    <span>Add New</span>
+                    <span>Tambah Baru</span>
                 </button>
             </div>
 
@@ -333,20 +333,20 @@ const Kriteria = () => {
                         <thead className="bg-gray-50 border-b border-gray-100">
                             <tr>
                                 {renderTableHeaders()}
-                                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600">Actions</th>
+                                <th className="px-6 py-4 text-right text-sm font-semibold text-gray-600">Aksi</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
                             {loading ? (
                                 <tr>
                                     <td colSpan="10" className="px-6 py-8 text-center text-gray-500">
-                                        Loading data...
+                                        Memuat data...
                                     </td>
                                 </tr>
                             ) : data.length === 0 ? (
                                 <tr>
                                     <td colSpan="10" className="px-6 py-8 text-center text-gray-500">
-                                        No data available
+                                        Tidak ada data tersedia
                                     </td>
                                 </tr>
                             ) : (
@@ -382,7 +382,7 @@ const Kriteria = () => {
                                 <form onSubmit={handleSubmit}>
                                     <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                                         <h3 className="text-lg font-bold text-gray-900">
-                                            {modal.type === 'add' ? 'Add New' : 'Edit'} Item
+                                            {modal.type === 'add' ? 'Tambah Baru' : 'Edit'} Item
                                         </h3>
                                         <button
                                             type="button"
@@ -401,13 +401,13 @@ const Kriteria = () => {
                                             onClick={() => setModal({ ...modal, isOpen: false })}
                                             className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
                                         >
-                                            Cancel
+                                            Batal
                                         </button>
                                         <button
                                             type="submit"
                                             className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-sm"
                                         >
-                                            Save Changes
+                                            Simpan Perubahan
                                         </button>
                                     </div>
                                 </form>

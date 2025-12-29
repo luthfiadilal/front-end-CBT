@@ -158,7 +158,7 @@ const Users = () => {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-semibold text-gray-900 group-hover:text-green-700 transition-colors">
-                                                    {user.nama}
+                                                    {user.nama || user.email}
                                                 </p>
                                                 <p className="text-xs text-gray-400 font-medium">ID: {user.uid.slice(0, 8)}...</p>
                                             </div>

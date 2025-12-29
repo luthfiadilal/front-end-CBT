@@ -17,11 +17,9 @@ export default function Register() {
         email: '',
         password: '',
         confirmPassword: '',
-        nis: '',
         tanggal_lahir: '',
         kelas: '',
-        alamat: '',
-        nip: ''
+        alamat: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -78,14 +76,9 @@ export default function Register() {
 
         // Role-specific validation
         if (selectedRole === 'siswa') {
-            if (!formData.nis.trim()) newErrors.nis = 'NIS harus diisi';
             if (!formData.tanggal_lahir) newErrors.tanggal_lahir = 'Tanggal lahir harus diisi';
             if (!formData.kelas.trim()) newErrors.kelas = 'Kelas harus diisi';
             if (!formData.alamat.trim()) newErrors.alamat = 'Alamat harus diisi';
-        }
-
-        if (selectedRole === 'teacher') {
-            if (!formData.nip.trim()) newErrors.nip = 'NIP harus diisi';
         }
 
         setErrors(newErrors);
@@ -111,12 +104,9 @@ export default function Register() {
             };
 
             if (selectedRole === 'siswa') {
-                submitData.nis = formData.nis;
                 submitData.tanggal_lahir = formData.tanggal_lahir;
                 submitData.kelas = formData.kelas;
                 submitData.alamat = formData.alamat;
-            } else if (selectedRole === 'teacher') {
-                submitData.nip = formData.nip;
             }
 
             await register(submitData);
@@ -219,44 +209,6 @@ export default function Register() {
                                     />
                                     {errors.nama && <p className="mt-1 text-sm text-red-600">{errors.nama}</p>}
                                 </div>
-
-                                {/* Siswa: NIS */}
-                                {selectedRole === 'siswa' && (
-                                    <div>
-                                        <label htmlFor="nis" className="block text-sm font-medium text-gray-700 mb-2">
-                                            NIS *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="nis"
-                                            name="nis"
-                                            value={formData.nis}
-                                            onChange={handleChange}
-                                            className={`w-full px-4 py-3 border ${errors.nis ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none`}
-                                            disabled={isLoading}
-                                        />
-                                        {errors.nis && <p className="mt-1 text-sm text-red-600">{errors.nis}</p>}
-                                    </div>
-                                )}
-
-                                {/* Teacher: NIP */}
-                                {selectedRole === 'teacher' && (
-                                    <div>
-                                        <label htmlFor="nip" className="block text-sm font-medium text-gray-700 mb-2">
-                                            NIP *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            id="nip"
-                                            name="nip"
-                                            value={formData.nip}
-                                            onChange={handleChange}
-                                            className={`w-full px-4 py-3 border ${errors.nip ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none`}
-                                            disabled={isLoading}
-                                        />
-                                        {errors.nip && <p className="mt-1 text-sm text-red-600">{errors.nip}</p>}
-                                    </div>
-                                )}
 
                                 <div>
                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">

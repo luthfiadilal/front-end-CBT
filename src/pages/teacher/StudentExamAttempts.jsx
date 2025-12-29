@@ -136,9 +136,6 @@ const StudentExamAttempts = () => {
                                                 Nama Siswa
                                             </th>
                                             <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                NIS
-                                            </th>
-                                            <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                                 Kelas
                                             </th>
                                             <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -167,19 +164,14 @@ const StudentExamAttempts = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
-                                                    <span className="text-sm font-medium text-gray-700">
-                                                        {student.nis || '-'}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4 text-center">
                                                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700 border border-blue-200">
                                                         {student.kelas || '-'}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
                                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${student.exam_status === 'Sudah Mengerjakan'
-                                                            ? 'bg-green-100 text-green-700 border-green-200'
-                                                            : 'bg-gray-100 text-gray-600 border-gray-200'
+                                                        ? 'bg-green-100 text-green-700 border-green-200'
+                                                        : 'bg-gray-100 text-gray-600 border-gray-200'
                                                         }`}>
                                                         {student.exam_status}
                                                     </span>
