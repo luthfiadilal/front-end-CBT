@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { getAllQuestions, deleteQuestion } from '../../services/questionService';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const QuestionList = () => {
     const navigate = useNavigate();
@@ -11,6 +12,9 @@ const QuestionList = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [selectedExam, setSelectedExam] = useState('');
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     useEffect(() => {
         fetchQuestions();
@@ -40,26 +44,25 @@ const QuestionList = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Apakah Anda yakin ingin menghapus soal ini?')) {
             try {
-                // Assuming deleteQuestion is imported from service. Need to import it!
-                // Let's add the import in the next step or assume it is available if I update the import line.
-                // Note: I will update the import line as well in a separate or same call if possible.
-                // Since I can only do one block, I will assume the import is updated or I will updat it separately.
-                // I will assume I need to update imports.
-                // Wait, I can't easily update imports AND this block if they are far apart.
-                // I'll update this block first, then imports.
-
-                // Oops, I need to call the service.
-                // await deleteQuestion(id); 
-                // We need to import deleteQuestion.
-                // I will just write the function usage here and update imports next.
-
-                // Actually, I can't call it if it's not imported.
-                // But this tool call is just text replacement.
                 await deleteQuestion(id);
+
+                // Show success alert
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: 'Soal berhasil dihapus! ✅'
+                });
+
                 fetchQuestions(); // Refresh list
             } catch (error) {
                 console.error('Failed to delete question', error);
-                alert('Gagal menghapus soal');
+
+                // Show error alert
+                setAlert({
+                    show: true,
+                    type: 'error',
+                    message: error.message || 'Gagal menghapus soal. Silakan coba lagi!'
+                });
             }
         }
     };
@@ -271,6 +274,16 @@ const QuestionList = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
             )}
         </div>
     );

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { getExams, createQuestion, updateQuestion, getQuestionById, getQuestionPairGroups } from '../../services/questionService';
 import kriteriaService from '../../services/kriteriaService';
+import CustomAlert from '../../components/common/CustomAlert';
 
 
 const CreateQuestion = () => {
@@ -31,6 +32,9 @@ const CreateQuestion = () => {
         { option_text: '', is_correct: false },
         { option_text: '', is_correct: false },
     ]);
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -130,8 +134,18 @@ const CreateQuestion = () => {
                     }
                 } catch (err) {
                     console.error('Failed to fetch question details', err);
-                    alert('Gagal memuat detail soal.');
-                    navigate('/teacher/questions');
+
+                    // Show error alert
+                    setAlert({
+                        show: true,
+                        type: 'error',
+                        message: 'Gagal memuat detail soal. Silakan coba lagi!'
+                    });
+
+                    // Navigate back after brief delay
+                    setTimeout(() => {
+                        navigate('/teacher/questions');
+                    }, 2000);
                 } finally {
                     setLoading(false);
                 }
@@ -180,7 +194,12 @@ const CreateQuestion = () => {
         try {
             const hasCorrectUrl = options.some(opt => opt.is_correct);
             if (!hasCorrectUrl) {
-                alert('Silakan pilih minimal satu jawaban yang benar');
+                // Show warning alert
+                setAlert({
+                    show: true,
+                    type: 'warning',
+                    message: 'Silakan pilih minimal satu jawaban yang benar!'
+                });
                 setLoading(false);
                 return;
             }
@@ -216,14 +235,35 @@ const CreateQuestion = () => {
 
             if (isEditMode) {
                 await updateQuestion(id, formData);
-                alert('Soal berhasil diperbarui!');
+
+                // Show success alert for edit
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: 'Soal berhasil diperbarui! 🎉'
+                });
             } else {
                 await createQuestion(formData);
-                alert('Soal berhasil dibuat!');
+
+                // Show success alert for create
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: 'Soal berhasil dibuat! 🎉'
+                });
             }
-            navigate('/teacher/questions');
+
+            // Navigate back after brief delay
+            setTimeout(() => {
+                navigate('/teacher/questions');
+            }, 1500);
         } catch (error) {
-            alert(error.message);
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: error.message || 'Gagal menyimpan soal. Silakan coba lagi!'
+            });
         } finally {
             setLoading(false);
         }
@@ -451,6 +491,16 @@ const CreateQuestion = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
+            )}
         </div>
 
     );

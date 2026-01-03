@@ -87,8 +87,8 @@ const StudentRanking = () => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="flex flex-col items-center gap-3">
-                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-green-600" />
-                    <span className="text-gray-600">Memuat data...</span>
+                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-orange-600" />
+                    <span className="text-white">Memuat data...</span>
                 </div>
             </div>
         );

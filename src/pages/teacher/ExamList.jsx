@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import examService from '../../services/examService';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const ExamList = () => {
     const navigate = useNavigate();
     const [exams, setExams] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     useEffect(() => {
         fetchExams();
@@ -27,9 +31,22 @@ const ExamList = () => {
         if (window.confirm('Apakah Anda yakin ingin menghapus latihan ini? Tindakan ini tidak dapat dibatalkan.')) {
             try {
                 await examService.deleteExam(id);
+
+                // Show success alert
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: 'Latihan berhasil dihapus! ✅'
+                });
+
                 fetchExams(); // Refresh list
             } catch (error) {
-                alert('Gagal menghapus latihan: ' + error.message);
+                // Show error alert
+                setAlert({
+                    show: true,
+                    type: 'error',
+                    message: error.message || 'Gagal menghapus latihan. Silakan coba lagi!'
+                });
             }
         }
     };
@@ -125,6 +142,16 @@ const ExamList = () => {
                     </table>
                 </div>
             </div>
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
+            )}
         </div>
     );
 };

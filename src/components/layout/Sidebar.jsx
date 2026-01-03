@@ -30,7 +30,6 @@ const Sidebar = () => {
             { path: '/profile', label: 'Profil', icon: 'solar:user-bold' },
         ],
         siswa: [
-            { path: '/dashboard', label: 'Dashboard', icon: 'solar:widget-bold' },
             { path: '/student/latihan', label: 'Latihan', icon: 'solar:dumbbell-bold' },
             { path: '/student/ranking', label: 'Leaderboard', icon: 'solar:ranking-bold' },
             { path: '/profile', label: 'Profil', icon: 'solar:user-bold' },
@@ -114,7 +113,7 @@ const Sidebar = () => {
                     <div className="p-4 border-b border-gray-200 flex-shrink-0">
                         <div
                             onClick={() => {
-                                const dashboardPath = userRole === 'teacher' ? '/teacher/dashboard' : '/dashboard';
+                                const dashboardPath = userRole === 'teacher' ? '/teacher/dashboard' : '/student/latihan';
                                 navigate(dashboardPath);
                                 if (window.innerWidth < 1024) closeSidebar();
                             }}

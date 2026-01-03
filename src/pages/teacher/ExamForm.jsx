@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import examService from '../../services/examService';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const ExamForm = () => {
     const navigate = useNavigate();
@@ -18,6 +19,9 @@ const ExamForm = () => {
         total_questions: 10,
         is_active: true
     });
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     useEffect(() => {
         if (isEditMode) {
@@ -37,8 +41,18 @@ const ExamForm = () => {
             });
         } catch (error) {
             console.error('Failed to fetch exam details', error);
-            alert('Gagal memuat detail latihan.');
-            navigate('/teacher/exams');
+
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: 'Gagal memuat detail latihan. Silakan coba lagi!'
+            });
+
+            // Navigate back after brief delay
+            setTimeout(() => {
+                navigate('/teacher/exams');
+            }, 2000);
         } finally {
             setFetching(false);
         }
@@ -65,15 +79,37 @@ const ExamForm = () => {
 
             if (isEditMode) {
                 await examService.updateExam(id, payload);
-                alert('Latihan berhasil diperbarui!');
+
+                // Show success alert for edit
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: 'Latihan berhasil diperbarui! 🎉'
+                });
             } else {
                 await examService.createExam(payload);
-                alert('Latihan berhasil dibuat!');
+
+                // Show success alert for create
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: 'Latihan berhasil dibuat! 🎉'
+                });
             }
-            navigate('/teacher/exams');
+
+            // Navigate back after brief delay
+            setTimeout(() => {
+                navigate('/teacher/exams');
+            }, 1500);
         } catch (error) {
             console.error('Error saving exam:', error);
-            alert(error.response?.data?.error || 'Gagal menyimpan latihan.');
+
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: error.response?.data?.error || 'Gagal menyimpan latihan. Silakan coba lagi!'
+            });
         } finally {
             setLoading(false);
         }
@@ -197,6 +233,16 @@ const ExamForm = () => {
                     </div>
                 </form>
             </div>
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
+            )}
         </div>
     );
 };

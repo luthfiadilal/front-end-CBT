@@ -34,15 +34,28 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
+// Role-Based Redirect Component
+const RoleBasedRedirect = () => {
+  const { user } = useAuth();
+  const redirectPath = user?.role === 'siswa' ? '/student/latihan' : '/dashboard';
+  return <Navigate to={redirectPath} replace />;
+};
+
 // Public Route Component (redirect to dashboard if already logged in)
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
+  if (isAuthenticated) {
+    // Redirect based on user role
+    const redirectPath = user?.role === 'siswa' ? '/student/latihan' : '/dashboard';
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  return children;
 };
 
 function App() {
@@ -60,7 +73,7 @@ function App() {
               path="/"
               element={
                 <ProtectedRoute>
-                  <Navigate to="/dashboard" replace />
+                  <RoleBasedRedirect />
                 </ProtectedRoute>
               }
             />

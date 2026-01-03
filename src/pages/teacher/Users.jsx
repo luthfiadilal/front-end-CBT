@@ -3,6 +3,7 @@ import userService from '../../services/userService';
 import { Icon } from '@iconify/react';
 import CreateUserModal from '../../components/admin/CreateUserModal';
 import ConfirmationModal from '../../components/common/ConfirmationModal';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -15,6 +16,9 @@ const Users = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     useEffect(() => {
         fetchUsers();
@@ -57,14 +61,29 @@ const Users = () => {
             setIsDeleting(true);
             await userService.deleteUser(userToDelete.uid);
 
+            // Show success alert
+            setAlert({
+                show: true,
+                type: 'success',
+                message: `User ${userToDelete.nama} berhasil dihapus! ✅`
+            });
+
             // Close modal and refresh list
             setIsDeleteModalOpen(false);
             setUserToDelete(null);
             fetchUsers();
         } catch (err) {
             console.error(err);
-            // Optionally show error toast/alert here, existing error state handles main load errors
-            alert(err.message || 'Gagal menghapus user');
+
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: err.message || 'Gagal menghapus user. Silakan coba lagi!'
+            });
+
+            // Close delete modal on error to show the alert clearly
+            setIsDeleteModalOpen(false);
         } finally {
             setIsDeleting(false);
         }
@@ -240,6 +259,16 @@ const Users = () => {
                 variant="danger"
                 isLoading={isDeleting}
             />
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
+            )}
         </div>
     );
 };

@@ -57,8 +57,8 @@ const ExamResult = () => {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-green-50 to-emerald-100">
                 <div className="flex flex-col items-center gap-3">
-                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-green-600" />
-                    <span className="text-gray-600">Memuat hasil...</span>
+                    <Icon icon="svg-spinners:ring-resize" className="w-12 h-12 text-orange-600" />
+                    <span className="text-white">Memuat hasil...</span>
                 </div>
             </div>
         );

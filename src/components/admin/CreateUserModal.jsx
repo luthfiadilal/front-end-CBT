@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import userService from '../../services/userService';
+import CustomAlert from '../common/CustomAlert';
 
 // Move initialFormState outside component to prevent recreation on every render
 const initialFormState = {
@@ -18,6 +19,9 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [formData, setFormData] = useState(initialFormState);
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     useEffect(() => {
         if (isOpen) {
@@ -74,15 +78,41 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
 
             if (isEditMode) {
                 await userService.updateUser(userToEdit.uid, dataToSubmit);
+                // Show success alert for edit
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: `User ${formData.nama} berhasil diupdate! 🎉`
+                });
             } else {
                 await userService.createUser(dataToSubmit);
+                // Show success alert for create
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: `User ${formData.nama} berhasil dibuat! 🎉`
+                });
             }
 
-            onSuccess();
-            onClose();
+            // Close modal and refresh after brief delay
+            setTimeout(() => {
+                onSuccess();
+                onClose();
+                setAlert({ show: false, type: 'success', message: '' });
+            }, 1000);
+
         } catch (err) {
             console.error(err);
-            setError(err.message || `Gagal ${isEditMode ? 'mengupdate' : 'membuat'} user`);
+            const errorMessage = err.message || `Gagal ${isEditMode ? 'mengupdate' : 'membuat'} user`;
+
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: errorMessage
+            });
+
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -251,6 +281,16 @@ const CreateUserModal = ({ isOpen, onClose, onSuccess, userToEdit = null }) => {
                     </form>
                 </div>
             </div>
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
+            )}
         </div>
     );
 };

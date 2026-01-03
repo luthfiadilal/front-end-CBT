@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import kriteriaService from '../../services/kriteriaService';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const Kriteria = () => {
     const [activeTab, setActiveTab] = useState('master');
@@ -9,6 +10,9 @@ const Kriteria = () => {
     const [data, setData] = useState([]);
     const [modal, setModal] = useState({ isOpen: false, type: 'add', item: null });
     const [formData, setFormData] = useState({});
+
+    // Alert state
+    const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
     // Tab Configuration
     const tabs = [
@@ -64,6 +68,13 @@ const Kriteria = () => {
                     case 'konsistensi': await kriteriaService.createKonsistensiJawaban(payload); break;
                     case 'ketepatan': await kriteriaService.createKetepatanJawaban(payload); break;
                 }
+
+                // Show success alert for create
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: `Data berhasil ditambahkan! 🎉`
+                });
             } else {
                 const id = modal.item.id || modal.item.kode_kriteria;
                 switch (activeTab) {
@@ -73,12 +84,26 @@ const Kriteria = () => {
                     case 'konsistensi': await kriteriaService.updateKonsistensiJawaban(id, payload); break;
                     case 'ketepatan': await kriteriaService.updateKetepatanJawaban(id, payload); break;
                 }
+
+                // Show success alert for edit
+                setAlert({
+                    show: true,
+                    type: 'success',
+                    message: `Data berhasil diupdate! 🎉`
+                });
             }
+
             fetchData();
             setModal({ isOpen: false, type: 'add', item: null });
         } catch (error) {
             console.error('Error submitting form:', error);
-            alert('Gagal menyimpan data. Silakan periksa input Anda.');
+
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: error.message || 'Gagal menyimpan data. Silakan periksa input Anda.'
+            });
         }
     };
 
@@ -94,10 +119,24 @@ const Kriteria = () => {
                 case 'konsistensi': await kriteriaService.deleteKonsistensiJawaban(id); break;
                 case 'ketepatan': await kriteriaService.deleteKetepatanJawaban(id); break;
             }
+
+            // Show success alert for delete
+            setAlert({
+                show: true,
+                type: 'success',
+                message: `Data berhasil dihapus! ✅`
+            });
+
             fetchData();
         } catch (error) {
             console.error('Error deleting:', error);
-            alert('Gagal menghapus item.');
+
+            // Show error alert
+            setAlert({
+                show: true,
+                type: 'error',
+                message: error.message || 'Gagal menghapus item. Silakan coba lagi!'
+            });
         }
     };
 
@@ -416,6 +455,16 @@ const Kriteria = () => {
                     </>
                 )}
             </AnimatePresence>
+
+            {/* Custom Alert */}
+            {alert.show && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert({ show: false, type: 'success', message: '' })}
+                    duration={3000}
+                />
+            )}
         </div>
     );
 };
