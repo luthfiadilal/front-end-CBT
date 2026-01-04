@@ -127,6 +127,14 @@ const TakeExam = () => {
             const examData = await examService.getExamById(examId);
             setExam(examData);
 
+            // Get current user BEFORE starting exam
+            const currentUser = authService.getCurrentUser();
+            const userUid = currentUser?.id;
+
+            if (!userUid) {
+                throw new Error('User not authenticated');
+            }
+
             // Start exam attempt - only once
             const startResponse = await examStudentService.startExam(examId);
             const attemptIdValue = startResponse.attempt_id;
@@ -135,12 +143,13 @@ const TakeExam = () => {
             setAttemptId(attemptIdValue);
             setExamStartTime(startTime);
 
-            // Save to localStorage for persistence
+            // Save to localStorage for persistence - NOW INCLUDING user_uid
             const sessionKey = `exam_session_${examId}`;
             localStorage.setItem(sessionKey, JSON.stringify({
                 attemptId: attemptIdValue,
                 startTime: startTime.toISOString(),
-                examId: examId
+                examId: examId,
+                userUid: userUid  // ← STORE user_uid in session
             }));
 
             // Get questions
@@ -253,18 +262,29 @@ const TakeExam = () => {
             try {
                 setSubmitting(true);
 
-                // Call finishExam API
-                const user = authService.getCurrentUser();
+                // Get user_uid from exam session (stored during startExam)
+                const sessionKey = `exam_session_${examId}`;
+                const sessionData = localStorage.getItem(sessionKey);
+
+                if (!sessionData) {
+                    throw new Error('Exam session not found');
+                }
+
+                const session = JSON.parse(sessionData);
+                const userUid = session.userUid;  // ← Use stored user_uid from session
+
+                console.log('Finishing exam with user_uid:', userUid);
+
+                // Call finishExam API with the SAME user_uid from startExam
                 const resultData = await examStudentService.finishExam(
                     attemptId,
-                    user.id,
+                    userUid,  // ← Use session user_uid instead of getCurrentUser()
                     examId
                 );
 
                 console.log('Exam finished successfully:', resultData);
 
                 // Clean up session
-                const sessionKey = `exam_session_${examId}`;
                 localStorage.removeItem(sessionKey);
 
                 // Navigate to results page with data
