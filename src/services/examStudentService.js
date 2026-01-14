@@ -64,6 +64,22 @@ const examStudentService = {
             exam_id: examId
         });
         return response.data;
+    },
+
+    // Get all detail for PDF printing
+    getAllDetail: async ({ exam_id, kelas, user_uid }) => {
+        const response = await api.get('/student/exam/all-detail', {
+            params: { exam_id, kelas, user_uid }
+        });
+        return response.data;
+    },
+
+    // Delete one or all result
+    deleteResult: async ({ exam_id, kelas, user_uid }) => {
+        const response = await api.delete('/student/exam/delete-result', {
+            params: { exam_id, kelas, user_uid }
+        });
+        return response.data;
     }
 };
 
