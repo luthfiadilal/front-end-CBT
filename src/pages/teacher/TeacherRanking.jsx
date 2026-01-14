@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import examService from '../../services/examService';
 import examStudentService from '../../services/examStudentService';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const TeacherRanking = () => {
     const navigate = useNavigate();
@@ -16,6 +17,8 @@ const TeacherRanking = () => {
     const [selectedClass, setSelectedClass] = useState('');
     const [selectedStudent, setSelectedStudent] = useState('');
     const [printing, setPrinting] = useState(false);
+    const [alert, setAlert] = useState({ isOpen: false, type: 'success', message: '' });
+    const [deleting, setDeleting] = useState(false);
 
     const uniqueClasses = [...new Set(rankings.map(r => r.user_details?.kelas).filter(Boolean))];
 
@@ -72,6 +75,37 @@ const TeacherRanking = () => {
         navigate(`/student/latihan/result/${attemptId}`);
     };
 
+    // Helper to show alert
+    const showAlert = (type, message) => {
+        setAlert({ isOpen: true, type, message });
+    };
+
+    const handleDeleteFiltered = async () => {
+        if (!selectedExam) return;
+
+        const confirmMsg = selectedClass || selectedStudent
+            ? "Apakah Anda yakin ingin menghapus data ujian sesuai filter yang dipilih? Data tidak bisa dikembalikan."
+            : "PERINGATAN: Anda tidak memilih filter kelas atau siswa. Ini akan menghapus SEMUA hasil ujian untuk ujian ini. Lanjutkan?";
+
+        if (!window.confirm(confirmMsg)) return;
+
+        setDeleting(true);
+        try {
+            await examStudentService.deleteResult({
+                exam_id: selectedExam.id,
+                kelas: selectedClass || undefined,
+                user_uid: selectedStudent || undefined
+            });
+            showAlert('success', 'Data ujian berhasil dihapus.');
+            handleSelectExam(selectedExam); // Refresh
+        } catch (error) {
+            console.error("Delete Error:", error);
+            showAlert('error', 'Gagal menghapus data ujian.');
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     const handleDeleteResult = async (user_uid) => {
         if (!window.confirm("Apakah Anda yakin ingin menghapus data ujian siswa ini secara permanen?")) return;
 
@@ -80,12 +114,12 @@ const TeacherRanking = () => {
                 exam_id: selectedExam.id,
                 user_uid: user_uid
             });
-            alert("Data ujian siswa berhasil dihapus.");
+            showAlert('success', 'Data ujian siswa berhasil dihapus.');
             // Refresh list
             handleSelectExam(selectedExam);
         } catch (error) {
             console.error("Gagal menghapus data:", error);
-            alert("Terjadi kesalahan saat menghapus data.");
+            showAlert('error', 'Terjadi kesalahan saat menghapus data.');
         }
     };
 
@@ -107,7 +141,7 @@ const TeacherRanking = () => {
             // ... (rest of sorting and printing logic) ...
 
             if (data.length === 0) {
-                alert("Tidak ada data untuk dicetak.");
+                showAlert('warning', "Tidak ada data untuk dicetak.");
                 setPrinting(false);
                 return;
             }
@@ -252,7 +286,7 @@ const TeacherRanking = () => {
 
         } catch (error) {
             console.error("Print Error:", error);
-            alert("Gagal mencetak dokumen.");
+            showAlert('error', "Gagal mencetak dokumen.");
         } finally {
             setPrinting(false);
         }
@@ -287,6 +321,14 @@ const TeacherRanking = () => {
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
+            {alert.isOpen && (
+                <CustomAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(prev => ({ ...prev, isOpen: false }))}
+                />
+            )}
+
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-white mb-2">Ranking Ujian Siswa</h1>
@@ -401,18 +443,33 @@ const TeacherRanking = () => {
                                             {filteredRankings.length} peserta {selectedClass ? `(${selectedClass})` : ''}
                                         </p>
                                     </div>
-                                    <button
-                                        onClick={handlePrintDocs}
-                                        disabled={printing || rankings.length === 0}
-                                        className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
-                                    >
-                                        {printing ? (
-                                            <Icon icon="svg-spinners:ring-resize" className="w-4 h-4" />
-                                        ) : (
-                                            <Icon icon="solar:printer-bold" className="w-4 h-4" />
-                                        )}
-                                        Print PDF
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={handleDeleteFiltered}
+                                            disabled={printing || deleting || rankings.length === 0}
+                                            className="bg-red-500/20 hover:bg-red-500/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50 border border-white/20"
+                                            title="Hapus data sesuai filter (Semua jika tanpa filter)"
+                                        >
+                                            {deleting ? (
+                                                <Icon icon="svg-spinners:ring-resize" className="w-4 h-4" />
+                                            ) : (
+                                                <Icon icon="solar:trash-bin-trash-bold" className="w-4 h-4" />
+                                            )}
+                                            Hapus Data
+                                        </button>
+                                        <button
+                                            onClick={handlePrintDocs}
+                                            disabled={printing || deleting || rankings.length === 0}
+                                            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
+                                        >
+                                            {printing ? (
+                                                <Icon icon="svg-spinners:ring-resize" className="w-4 h-4" />
+                                            ) : (
+                                                <Icon icon="solar:printer-bold" className="w-4 h-4" />
+                                            )}
+                                            Print PDF
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* Table Content */}
