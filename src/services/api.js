@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authService from './authService';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/cbt';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api-cbt.fidev.web.id/cbt';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
