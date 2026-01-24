@@ -150,7 +150,7 @@ export default function Login() {
                     </form>
 
                     {/* Register Link */}
-                    <div className="mt-6 text-center">
+                    {/* <div className="mt-6 text-center">
                         <p className="text-gray-600 text-sm">
                             Belum punya akun?{' '}
                             <Link
@@ -160,12 +160,12 @@ export default function Login() {
                                 Daftar Sekarang
                             </Link>
                         </p>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Footer */}
                 <p className="text-center text-gray-500 text-sm mt-8">
-                    © 2024 TPQ Husnul Khotimah. Hak cipta dilindungi.
+                    © 2026 TPQ Husnul Khotimah. Hak cipta dilindungi.
                 </p>
             </div>
         </div>

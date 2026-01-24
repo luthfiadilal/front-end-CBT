@@ -113,13 +113,13 @@ const ExamResult = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                    {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <div className="flex items-center gap-3 mb-2">
                             <Icon icon="solar:star-bold" className="w-6 h-6 text-orange-600" />
                             <span className="text-gray-600 text-sm">Total Skor</span>
                         </div>
                         <div className="text-3xl font-bold text-gray-900">{total_score}</div>
-                    </div>
+                    </div> */}
 
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                         <div className="flex items-center gap-3 mb-2">
