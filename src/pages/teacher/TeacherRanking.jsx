@@ -176,7 +176,7 @@ const TeacherRanking = () => {
 
                 const tableColumn = [
                     "Rank", "Nama", "Kelas",
-                    "Jml Benar", "Score", "Durasi",
+                    "Jml Benar", "Durasi",
                     "Pas. Benar", "Skor Sulit", "Total Soal",
                     "Nilai Akhir", "Status", "SAW"
                 ];
@@ -189,7 +189,6 @@ const TeacherRanking = () => {
                         item.student_class,
                         // New Columns
                         item.hasil_cbt?.jumlah_benar || 0,
-                        item.exam_attempt?.total_score || 0,
                         (item.exam_attempt?.duration_minutes || 0) + ' mnt',
                         item.hasil_cbt?.pasangan_benar || 0,
                         item.hasil_cbt?.skor_kesulitan || 0,

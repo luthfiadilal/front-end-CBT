@@ -271,11 +271,18 @@ const ExamResult = () => {
                 {/* Action Button */}
                 <div className="flex justify-center">
                     <button
-                        onClick={() => navigate('/student/latihan')}
+                        onClick={() => {
+                            const isTeacher = authService.getCurrentUser()?.role === 'teacher';
+                            navigate(isTeacher ? '/teacher/ranking' : '/student/latihan');
+                        }}
                         className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold py-4 px-8 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 flex items-center gap-2 shadow-lg"
                     >
                         <Icon icon="solar:arrow-left-bold" className="w-5 h-5" />
-                        <span>Kembali ke Daftar Latihan</span>
+                        <span>
+                            {authService.getCurrentUser()?.role === 'teacher'
+                                ? 'Kembali ke leaderboard'
+                                : 'Kembali ke Daftar Latihan'}
+                        </span>
                     </button>
                 </div>
             </div>
