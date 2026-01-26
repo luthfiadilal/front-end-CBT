@@ -175,10 +175,10 @@ const TeacherRanking = () => {
                 doc.text(`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 27);
 
                 const tableColumn = [
-                    "Rank", "Nama", "Kelas",
-                    "Jml Benar", "Durasi",
-                    "Pas. Benar", "Skor Sulit", "Total Soal",
-                    "Nilai Akhir", "Status", "SAW"
+                    "Rank", "Nama", "Kelas", "Total Soal",
+                    "Jml Benar", "Skor Sulit",
+                    "Pas. Benar", "Durasi",
+                    "Nilai Akhir", "SAW", "Status",
                 ];
                 const tableRows = [];
 
@@ -188,15 +188,16 @@ const TeacherRanking = () => {
                         item.student_name,
                         item.student_class,
                         // New Columns
-                        item.hasil_cbt?.jumlah_benar || 0,
-                        (item.exam_attempt?.duration_minutes || 0) + ' mnt',
-                        item.hasil_cbt?.pasangan_benar || 0,
-                        item.hasil_cbt?.skor_kesulitan || 0,
                         item.exam?.total_questions || 0,
+                        item.hasil_cbt?.jumlah_benar || 0,
+                        item.hasil_cbt?.skor_kesulitan || 0,
+                        item.hasil_cbt?.pasangan_benar || 0,
+                        (item.exam_attempt?.duration_minutes || 0) + ' mnt',
+
                         // Existing
                         item.ranking_saw.nilai_konversi.toFixed(1),
+                        item.ranking_saw.nilai_preferensi.toFixed(3),
                         item.ranking_saw.status,
-                        item.ranking_saw.nilai_preferensi.toFixed(3)
                     ];
                     tableRows.push(row);
                 });
