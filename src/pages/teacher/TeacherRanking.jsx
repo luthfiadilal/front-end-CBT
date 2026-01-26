@@ -178,7 +178,7 @@ const TeacherRanking = () => {
                     "Rank", "Nama", "Kelas", "Total Soal",
                     "Jml Benar", "Skor Sulit",
                     "Pas. Benar", "Durasi",
-                    "Nilai Akhir", "SAW", "Status",
+                    "SAW", "Nilai Akhir", "Status",
                 ];
                 const tableRows = [];
 
@@ -195,8 +195,8 @@ const TeacherRanking = () => {
                         (item.exam_attempt?.duration_minutes || 0) + ' mnt',
 
                         // Existing
-                        item.ranking_saw.nilai_konversi.toFixed(1),
                         item.ranking_saw.nilai_preferensi.toFixed(3),
+                        item.ranking_saw.nilai_konversi.toFixed(1),
                         item.ranking_saw.status,
                     ];
                     tableRows.push(row);

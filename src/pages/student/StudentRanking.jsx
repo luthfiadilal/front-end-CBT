@@ -7,7 +7,7 @@ import examService from '../../services/examService';
 import examStudentService from '../../services/examStudentService';
 import CustomAlert from '../../components/common/CustomAlert';
 
-const TeacherRanking = () => {
+const StudentRanking = () => {
     const navigate = useNavigate();
     const [exams, setExams] = useState([]);
     const [selectedExam, setSelectedExam] = useState(null);
@@ -178,7 +178,7 @@ const TeacherRanking = () => {
                     "Rank", "Nama", "Kelas", "Total Soal",
                     "Jml Benar", "Skor Sulit",
                     "Pas. Benar", "Durasi",
-                    "Nilai Akhir", "SAW", "Status",
+                    "SAW", "Nilai Akhir", "Status",
                 ];
                 const tableRows = [];
 
@@ -195,8 +195,8 @@ const TeacherRanking = () => {
                         (item.exam_attempt?.duration_minutes || 0) + ' mnt',
 
                         // Existing
-                        item.ranking_saw.nilai_konversi.toFixed(1),
                         item.ranking_saw.nilai_preferensi.toFixed(3),
+                        item.ranking_saw.nilai_konversi.toFixed(1),
                         item.ranking_saw.status,
                     ];
                     tableRows.push(row);
@@ -586,4 +586,4 @@ const TeacherRanking = () => {
     );
 };
 
-export default TeacherRanking;
+export default StudentRanking;
