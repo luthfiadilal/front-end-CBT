@@ -561,13 +561,13 @@ const StudentRanking = () => {
                                                                     >
                                                                         <Icon icon="solar:eye-bold" className="w-4 h-4" />
                                                                     </button>
-                                                                    <button
+                                                                    {/* <button
                                                                         onClick={() => handleDeleteResult(rank.user_uid)}
                                                                         className="p-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-200"
                                                                         title="Hapus Data"
                                                                     >
                                                                         <Icon icon="solar:trash-bin-trash-bold" className="w-4 h-4" />
-                                                                    </button>
+                                                                    </button> */}
                                                                 </div>
                                                             </td>
                                                         </tr>
